@@ -1,3 +1,7 @@
+# Custom
+*.sqlite
+config.json
+
 # Logs
 logs
 *.log

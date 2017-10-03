@@ -1,7 +1,7 @@
 {
   "newFile.defaultFileExtension": ".js",
-  "newFile.showPathRelativeTo": "project",
-  "newFile.relativeTo": "project",
+  "newFile.showPathRelativeTo": "none",
+  "newFile.relativeTo": "file",
 
   "prettier.printWidth": 100,
   "prettier.trailingComma": "all",
