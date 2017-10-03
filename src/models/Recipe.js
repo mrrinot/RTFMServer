@@ -3,6 +3,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
 const Item = require("./Item");
+const Job = require("./Job");
 
 const Recipe = sequelize.define(
   "recipe",
@@ -19,24 +20,42 @@ const Recipe = sequelize.define(
         this.setDataValue("quantities", val.join(";"));
       },
     },
+    resultId: {
+      primaryKey: true,
+      type: Sequelize.INTEGER,
+      onDelete: "cascade",
+    },
   },
   {
     timestamps: false,
   },
 );
 
+Recipe.removeAttribute("id");
+
+// Ingredients table with itemId, recipeId
 Recipe.belongsToMany(Item, {
   as: "ingredients",
   constraints: false,
+  timestamps: false,
+  through: "Ingredients",
+});
+Item.belongsToMany(Recipe, {
+  as: "foundIn",
+  constraints: false,
+  timestamps: false,
   through: "Ingredients",
 });
 
-Recipe.belongsTo(Item, { as: "result" });
-Item.belongsTo(Recipe, {
-  as: "recipe",
-  allowNull: true,
-  constraints: false,
-  defaultValue: null,
+// Recipe.jobId
+Recipe.belongsTo(Job, {
+  as: "job",
+});
+
+// Recipe.resultId
+Recipe.belongsTo(Item, {
+  as: "result",
+  foreignKey: "resultId",
 });
 
 module.exports = Recipe;
