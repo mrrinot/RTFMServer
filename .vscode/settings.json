@@ -1,0 +1,13 @@
+{
+  "newFile.defaultFileExtension": ".js",
+  "newFile.showPathRelativeTo": "project",
+  "newFile.relativeTo": "project",
+
+  "prettier.printWidth": 100,
+  "prettier.trailingComma": "all",
+  "prettier.eslintIntegration": true,
+
+  "files.eol": "\n",
+
+  "editor.formatOnSave": true
+}
