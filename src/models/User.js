@@ -3,7 +3,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
 
-module.exports = sequelize.define("user", {
+const User = sequelize.define("user", {
   id: {
     primaryKey: true,
     type: Sequelize.UUID,
@@ -15,6 +15,14 @@ module.exports = sequelize.define("user", {
     allowNull: false,
     validate: {
       len: [4, 128],
+    },
+  },
+  adminLevel: {
+    type: Sequelize.INTEGER,
+    validation: {
+      min: 0,
+      max: 3,
+      isInt: true,
     },
   },
   email: {
@@ -33,3 +41,5 @@ module.exports = sequelize.define("user", {
     allowNull: false,
   },
 });
+
+module.exports = User;
