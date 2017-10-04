@@ -16,9 +16,9 @@ module.exports = new Sequelize("rtfm", "username", "password", {
     idle: 10000,
   },
 
-  /* logging(...args) {
+  logging(...args) {
     winston.verbose(...args);
-  }, */
+  },
 
   storage: path.join(nconf.get("base_dir"), "db.sqlite"),
 });

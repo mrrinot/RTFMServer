@@ -11,8 +11,8 @@ const ItemType = sequelize.define(
       type: Sequelize.INTEGER,
     },
     name: {
-      index: true,
       type: Sequelize.STRING,
+      defaultValue: "NONAME",
     },
   },
   {

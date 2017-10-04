@@ -4,6 +4,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
 const Item = require("./Item");
 const Job = require("./Job");
+const winston = require("winston");
 const Ingredient = require("./Ingredient");
 
 const Recipe = sequelize.define(
@@ -20,30 +21,11 @@ const Recipe = sequelize.define(
   },
 );
 
-Recipe.make = async function makeRecipe(recipe) {
-  const madeRecipe = await Recipe.create({
+Recipe.convert = function convertRecipe(recipe) {
+  return {
     resultId: recipe.resultId,
-    quantities: [10, 1, 2, 1, 1, 8],
-    jobId: 27,
-  });
-  const ingredients = recipe.ingredientIds.map((id, index) =>
-    Ingredient.build({
-      itemId: id,
-      quantity: recipe.quantities[index],
-    }),
-  );
-  try {
-    await Promise.all(
-      ingredients.map(async ing =>
-        madeRecipe.addIngredient(ing.itemId, {
-          through: { quantity: ing.quantity },
-        }),
-      ),
-    );
-  } catch (e) {
-    console.log(e);
-  }
-  return Recipe.findOne({ where: { resultId: recipe.resultId } });
+    jobId: recipe.jobId,
+  };
 };
 
 Recipe.removeAttribute("id");

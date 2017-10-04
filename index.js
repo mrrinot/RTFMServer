@@ -1,7 +1,7 @@
 "use strict";
 
-// require("./src/tools/confSetup");
-// require("./src/app");
+require("./src/tools/confSetup");
+
 const app = require("express")();
 
 app.get("/items/:input", (req, res) => {

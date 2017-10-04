@@ -16,10 +16,6 @@ const Item = sequelize.define(
     },
     level: {
       type: Sequelize.INTEGER,
-      validate: {
-        min: 1,
-        max: 200,
-      },
     },
     name: {
       index: true,
@@ -27,10 +23,6 @@ const Item = sequelize.define(
     },
     criticalHitProbability: {
       type: Sequelize.INTEGER,
-      validate: {
-        min: 0,
-        max: 100,
-      },
     },
     criteria: {
       type: Sequelize.STRING,
@@ -51,5 +43,19 @@ const Item = sequelize.define(
 Item.belongsTo(ItemType, {
   as: "type",
 });
+
+Item.convert = function convertItem(item) {
+  return {
+    id: item.id,
+    iconId: item.iconId,
+    level: item.level,
+    name: item.nameId_string,
+    criticalHitProbability: item.criticalHitProbability,
+    criteria: item.criteria,
+    ethereal: item.ethereal,
+    description: item.descriptionId_string,
+    typeId: item.typeId,
+  };
+};
 
 module.exports = Item;

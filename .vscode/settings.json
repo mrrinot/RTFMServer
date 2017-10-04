@@ -9,5 +9,9 @@
 
   "files.eol": "\n",
 
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+
+  "files.exclude": {
+    "node_modules/": true
+  }
 }
