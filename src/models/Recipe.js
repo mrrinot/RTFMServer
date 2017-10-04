@@ -4,22 +4,11 @@ const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
 const Item = require("./Item");
 const Job = require("./Job");
+const Ingredient = require("./Ingredient");
 
 const Recipe = sequelize.define(
   "recipe",
   {
-    quantities: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      get() {
-        return this.getDataValue("quantities")
-          .split(";")
-          .map(val => parseInt(val, 10));
-      },
-      set(val) {
-        this.setDataValue("quantities", val.join(";"));
-      },
-    },
     resultId: {
       primaryKey: true,
       type: Sequelize.INTEGER,
@@ -31,6 +20,32 @@ const Recipe = sequelize.define(
   },
 );
 
+Recipe.make = async function makeRecipe(recipe) {
+  const madeRecipe = await Recipe.create({
+    resultId: recipe.resultId,
+    quantities: [10, 1, 2, 1, 1, 8],
+    jobId: 27,
+  });
+  const ingredients = recipe.ingredientIds.map((id, index) =>
+    Ingredient.build({
+      itemId: id,
+      quantity: recipe.quantities[index],
+    }),
+  );
+  try {
+    await Promise.all(
+      ingredients.map(async ing => {
+        await madeRecipe.addIngredient(ing.itemId, {
+          through: { quantity: ing.quantity },
+        });
+      }),
+    );
+  } catch (e) {
+    console.log(e);
+  }
+  return Recipe.findOne({ where: { resultId: recipe.resultId } });
+};
+
 Recipe.removeAttribute("id");
 
 // Ingredients table with itemId, recipeId
@@ -38,13 +53,13 @@ Recipe.belongsToMany(Item, {
   as: "ingredients",
   constraints: false,
   timestamps: false,
-  through: "Ingredients",
+  through: Ingredient,
 });
 Item.belongsToMany(Recipe, {
   as: "foundIn",
   constraints: false,
   timestamps: false,
-  through: "Ingredients",
+  through: Ingredient,
 });
 
 // Recipe.jobId

@@ -23,4 +23,12 @@ const Job = sequelize.define(
   },
 );
 
+Job.convert = function convertJob(job) {
+  return {
+    id: job.id,
+    name: job.nameId_string,
+    iconId: job.iconId,
+  };
+};
+
 module.exports = Job;

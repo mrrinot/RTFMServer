@@ -20,6 +20,16 @@ const winston = require("winston");
       "Cette création hybride entre une hôte et une cape, est franchement étonnante. Si elle avait été confectionnée en cuir, le Captain Chafer l'aurait adorée.",
   });
 
+  winston.info("Creating item...");
+  await Item.create({
+    id: 6995,
+    name: "Cape Hôte2",
+    iconId: 17080,
+    level: 56,
+    description:
+      "Cette création hybride entre une hôte et une cape, est franchement étonnante. Si elle avait été confectionnée en cuir, le Captain Chafer l'aurait adorée.",
+  });
+
   winston.info("Creating job...");
   let job = await Job.create({
     id: 27,
@@ -28,13 +38,13 @@ const winston = require("winston");
   });
 
   winston.info("Creating recipe...");
-  let recipe = await Recipe.create({
+  let recipe = await Recipe.make({
     resultId: 6994,
     resultName: "Cape Hôte",
     resultTypeId: 17,
     resultLevel: 56,
-    ingredientIds: [1689, 642, 1730, 103, 1672, 291],
-    quantities: [10, 1, 2, 1, 1, 8],
+    ingredientIds: [6994, 6995],
+    quantities: [10, 1],
     skillId: 63,
     jobId: 27,
   });

@@ -20,4 +20,11 @@ const ItemType = sequelize.define(
   },
 );
 
+ItemType.convert = function convertItemType(itemType) {
+  return {
+    id: itemType.id,
+    name: itemType.nameId_string,
+  };
+};
+
 module.exports = ItemType;
