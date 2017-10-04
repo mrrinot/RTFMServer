@@ -34,11 +34,11 @@ Recipe.make = async function makeRecipe(recipe) {
   );
   try {
     await Promise.all(
-      ingredients.map(async ing => {
-        await madeRecipe.addIngredient(ing.itemId, {
+      ingredients.map(async ing =>
+        madeRecipe.addIngredient(ing.itemId, {
           through: { quantity: ing.quantity },
-        });
-      }),
+        }),
+      ),
     );
   } catch (e) {
     console.log(e);
