@@ -2,10 +2,11 @@
 
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
-const ItemType = require("./ItemType");
+const S_ItemType = require("./S_ItemType");
+const S_Effect = require("./S_Effect");
 
-const Item = sequelize.define(
-  "item",
+const S_Item = sequelize.define(
+  "s_item",
   {
     id: {
       primaryKey: true,
@@ -40,11 +41,13 @@ const Item = sequelize.define(
   },
 );
 
-Item.belongsTo(ItemType, {
+S_Item.belongsTo(S_ItemType, {
   as: "type",
 });
 
-Item.convert = function convertItem(item) {
+S_Item.hasMany(S_Effect);
+
+S_Item.convert = function convertItem(item) {
   return {
     id: item.id,
     iconId: item.iconId,
@@ -58,4 +61,4 @@ Item.convert = function convertItem(item) {
   };
 };
 
-module.exports = Item;
+module.exports = S_Item;

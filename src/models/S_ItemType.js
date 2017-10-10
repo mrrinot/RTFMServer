@@ -3,8 +3,8 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
 
-const ItemType = sequelize.define(
-  "itemType",
+const S_ItemType = sequelize.define(
+  "s_itemType",
   {
     id: {
       primaryKey: true,
@@ -20,11 +20,11 @@ const ItemType = sequelize.define(
   },
 );
 
-ItemType.convert = function convertItemType(itemType) {
+S_ItemType.convert = function convertItemType(itemType) {
   return {
     id: itemType.id,
     name: itemType.nameId_string,
   };
 };
 
-module.exports = ItemType;
+module.exports = S_ItemType;
