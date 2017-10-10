@@ -109,8 +109,8 @@ const sequelize = require("./src/sequelize");
     recipes.forEach(recipe => {
       recipe.ingredientIds.forEach((id, index) => {
         ingredients.push({
-          sItemId: id,
-          sRecipeResultId: recipe.resultId,
+          itemId: id,
+          recipeResultId: recipe.resultId,
           quantity: recipe.quantities[index],
         });
       });
@@ -133,5 +133,5 @@ const sequelize = require("./src/sequelize");
     ],
   });
 
-  //console.log(JSON.stringify(recipeBois.get({ plain: true }), null, 4));
+  console.log(JSON.stringify(recipeBois.get({ plain: true }), null, 4));
 })();

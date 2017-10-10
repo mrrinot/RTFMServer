@@ -43,6 +43,7 @@ const S_Item = sequelize.define(
 
 S_Item.belongsTo(S_ItemType, {
   as: "type",
+  foreignKey: "typeId",
 });
 
 S_Item.hasMany(S_Effect);

@@ -32,6 +32,8 @@ S_Recipe.removeAttribute("id");
 // S_Ingredients table with itemId, recipeId
 S_Recipe.belongsToMany(S_Item, {
   as: "ingredients",
+  foreignKey: "recipeResultId",
+  otherKey: "itemId",
   constraints: false,
   timestamps: false,
   through: S_Ingredient,
@@ -40,6 +42,7 @@ S_Recipe.belongsToMany(S_Item, {
 // S_Recipe.jobId
 S_Recipe.belongsTo(S_Job, {
   as: "job",
+  foreignKey: "jobId",
 });
 
 // S_Recipe.resultId
