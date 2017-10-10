@@ -9,6 +9,7 @@ const path = require("path");
 require("./src/tools/confSetup");
 const Job = require("./src/models/Job");
 const Item = require("./src/models/Item");
+const User = require("./src/models/User");
 const ItemType = require("./src/models/ItemType");
 const Ingredient = require("./src/models/Ingredient");
 const Recipe = require("./src/models/Recipe");

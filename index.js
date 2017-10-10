@@ -6,10 +6,14 @@ const winston = require("winston");
 const nconf = require("nconf");
 const path = require("path");
 const fs = require("fs");
+const bodyParser = require("body-parser");
 const app = require("express")();
 const serveStatic = require("serve-static");
 
 const Item = require("./src/models/Item");
+const User = require("./src/models/User");
+
+app.use(bodyParser.json());
 
 let iconsPath = nconf.get("iconsPath");
 
@@ -33,6 +37,25 @@ app.get("/items/:input", async (req, res) => {
     limit: 50,
   });
   res.json(items);
+});
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const account = await User.find({
+    where: {
+      email,
+    },
+  });
+  if (account !== null) {
+    const isValid = await account.isValidPassword(password);
+    if (isValid) {
+      res.json(account.toAuthJSON());
+    } else {
+      res.status(400).json({ errors: { global: "Invalid credentials" } });
+    }
+  } else {
+    res.status(400).json({ errors: { global: "This email isn't linked to any account" } });
+  }
 });
 
 app.listen(8080, () => {

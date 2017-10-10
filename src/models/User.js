@@ -2,6 +2,9 @@
 
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const nconf = require("nconf");
 
 const User = sequelize.define("user", {
   id: {
@@ -41,5 +44,18 @@ const User = sequelize.define("user", {
     allowNull: false,
   },
 });
+
+User.prototype.isValidPassword = async function isValidPassword(pass) {
+  const ret = await bcrypt.compare(pass, this.password);
+  return ret;
+};
+
+User.prototype.generateJWT = function generateJWT() {
+  return jwt.sign({ email: this.email }, nconf.get("JWT_SECRETKEY"));
+};
+
+User.prototype.toAuthJSON = function toAuthJSON() {
+  return { email: this.email, token: this.generateJWT() };
+};
 
 module.exports = User;
