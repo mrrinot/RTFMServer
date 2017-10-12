@@ -25,7 +25,7 @@ class EffectInstance {
 
   prepareDescription(descriptionStr, effectId) {
     if (!descriptionStr) {
-      return "";
+      return `__NOT_DECODED__ (${effectId})`;
     }
     let paramArray = [];
     let resultStr = "";
@@ -108,8 +108,8 @@ class EffectInstance {
         }
       }
       resultStr = PatternDecoder.getDescription(descriptionStr, paramArray);
-      if (resultStr === null || resultStr === "") {
-        return "";
+      if (!resultStr) {
+        return `__NOT_DECODED__ (${effectId})`;
       }
     } else {
       resultStr = descriptionStr;
@@ -120,4 +120,4 @@ class EffectInstance {
 
 module.exports = EffectInstance;
 
-console.log(new EffectInstance().prepareDescription("#1{~1~2 à }#2 (dommages Feu)", 100));
+console.log(new EffectInstance().prepareDescription(undefined, 984));
