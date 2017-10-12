@@ -1,7 +1,7 @@
 "use strict";
 
 const Sequelize = require("sequelize");
-const sequelize = require("../sequelize");
+const sequelize = require("../../sequelize");
 const S_Item = require("./S_Item");
 const S_Job = require("./S_Job");
 const S_Ingredient = require("./S_Ingredient");
