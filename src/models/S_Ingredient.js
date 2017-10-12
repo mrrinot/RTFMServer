@@ -3,8 +3,8 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
 
-const Ingredient = sequelize.define(
-  "ingredient",
+const S_Ingredient = sequelize.define(
+  "s_ingredient",
   {
     quantity: {
       type: Sequelize.INTEGER,
@@ -16,4 +16,4 @@ const Ingredient = sequelize.define(
   },
 );
 
-module.exports = Ingredient;
+module.exports = S_Ingredient;

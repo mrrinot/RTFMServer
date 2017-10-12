@@ -3,8 +3,8 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
 
-const Job = sequelize.define(
-  "job",
+const S_Job = sequelize.define(
+  "s_job",
   {
     id: {
       primaryKey: true,
@@ -23,7 +23,7 @@ const Job = sequelize.define(
   },
 );
 
-Job.convert = function convertJob(job) {
+S_Job.convert = function convertJob(job) {
   return {
     id: job.id,
     name: job.nameId_string,
@@ -31,4 +31,4 @@ Job.convert = function convertJob(job) {
   };
 };
 
-module.exports = Job;
+module.exports = S_Job;

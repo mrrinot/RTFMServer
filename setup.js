@@ -7,12 +7,12 @@ const nconf = require("nconf");
 const path = require("path");
 
 require("./src/tools/confSetup");
-const Job = require("./src/models/Job");
-const Item = require("./src/models/Item");
+const S_Job = require("./src/models/S_Job");
+const S_Item = require("./src/models/S_Item");
 const User = require("./src/models/User");
-const ItemType = require("./src/models/ItemType");
-const Ingredient = require("./src/models/Ingredient");
-const Recipe = require("./src/models/Recipe");
+const S_ItemType = require("./src/models/S_ItemType");
+const S_Ingredient = require("./src/models/S_Ingredient");
+const S_Recipe = require("./src/models/S_Recipe");
 const sequelize = require("./src/sequelize");
 
 (async function() {
@@ -32,8 +32,8 @@ const sequelize = require("./src/sequelize");
   //
   try {
     winston.info(`Parsing jobs... ${jobs.length} entries`);
-    jobs = jobs.map(job => Job.convert(job));
-    await Job.bulkCreate(jobs, { validate: true });
+    jobs = jobs.map(job => S_Job.convert(job));
+    await S_Job.bulkCreate(jobs, { validate: true });
     winston.info("Jobs parsed...");
   } catch (e) {
     winston.error("Unable to parse jobs.");
@@ -50,8 +50,8 @@ const sequelize = require("./src/sequelize");
   let itemTypes = require(`${makePath("ItemTypes")}`);
   try {
     winston.info(`Parsing itemTypes... ${itemTypes.length} entries`);
-    itemTypes = itemTypes.map(itemType => ItemType.convert(itemType));
-    await ItemType.bulkCreate(itemTypes, { validate: true });
+    itemTypes = itemTypes.map(itemType => S_ItemType.convert(itemType));
+    await S_ItemType.bulkCreate(itemTypes, { validate: true });
     winston.info("ItemTypes parsed...");
   } catch (e) {
     winston.error("Unable to parse itemTypes.");
@@ -68,8 +68,8 @@ const sequelize = require("./src/sequelize");
   let items = require(`${makePath("Items")}`);
   try {
     winston.info(`Parsing items... ${items.length} entries`);
-    items = items.map(item => Item.convert(item));
-    await Item.bulkCreate(items, { validate: true });
+    items = items.map(item => S_Item.convert(item));
+    await S_Item.bulkCreate(items, { validate: true });
     winston.info("Items parsed...");
   } catch (e) {
     winston.error("Unable to parse items.");
@@ -87,8 +87,8 @@ const sequelize = require("./src/sequelize");
   let recipes = originalRecipes;
   try {
     winston.info(`Parsing recipes... ${recipes.length} entries`);
-    recipes = recipes.map(recipe => Recipe.convert(recipe));
-    await Recipe.bulkCreate(recipes, { validate: true });
+    recipes = recipes.map(recipe => S_Recipe.convert(recipe));
+    await S_Recipe.bulkCreate(recipes, { validate: true });
     winston.info("Recipes parsed...");
   } catch (e) {
     winston.error("Unable to parse recipes.");
@@ -116,7 +116,7 @@ const sequelize = require("./src/sequelize");
       });
     });
     winston.info(`${ingredients.length} ingredients found...`);
-    await Ingredient.bulkCreate(ingredients, { validate: true });
+    await S_Ingredient.bulkCreate(ingredients, { validate: true });
     winston.info("Ingredients created...");
   } catch (e) {
     winston.error("Unable to create ingredients.");
@@ -124,12 +124,12 @@ const sequelize = require("./src/sequelize");
     process.exit(1);
   }
 
-  const recipeBois = await Recipe.findOne({
+  const recipeBois = await S_Recipe.findOne({
     where: { resultId: 44 },
     include: [
-      { model: Item, as: "ingredients" },
-      { model: Item, as: "result" },
-      { model: Job, as: "job" },
+      { model: S_Item, as: "ingredients" },
+      { model: S_Item, as: "result" },
+      { model: S_Job, as: "job" },
     ],
   });
 
