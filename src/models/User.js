@@ -43,6 +43,13 @@ const User = sequelize.define("user", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  invitationToken: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    set() {
+      this.setDataValue("invitationToken", this.generateInvitationToken());
+    },
+  },
 });
 
 User.prototype.isValidPassword = async function isValidPassword(pass) {
@@ -50,12 +57,35 @@ User.prototype.isValidPassword = async function isValidPassword(pass) {
   return ret;
 };
 
+User.prototype.setPassword = async function setPassword(pass) {
+  this.password = await bcrypt.hash(pass, nconf.get("bcrypt_rounds"));
+  this.save();
+};
+
+User.prototype.generateInvitationToken = function generateInvitationToken() {
+  return jwt.sign({ email: this.email }, nconf.get("JWT_SECRETKEY"), {
+    expiresIn: "1h",
+  });
+};
+
+User.prototype.setInvitationToken = function setInvitationToken() {
+  this.setDataValue("invitationToken", this.generateInvitationToken());
+  this.save();
+};
+
 User.prototype.generateJWT = function generateJWT() {
-  return jwt.sign({ email: this.email }, nconf.get("JWT_SECRETKEY"));
+  return jwt.sign(
+    { email: this.email, adminLevel: this.adminLevel, pseudo: this.pseudo },
+    nconf.get("JWT_SECRETKEY"),
+  );
 };
 
 User.prototype.toAuthJSON = function toAuthJSON() {
   return { email: this.email, token: this.generateJWT() };
+};
+
+User.prototype.generateInvitationUrl = function generateInvitationUrl() {
+  return `http://localhost:3000/invite/${this.invitationToken}`;
 };
 
 module.exports = User;
