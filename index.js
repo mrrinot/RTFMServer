@@ -73,6 +73,8 @@ if (iconsPath) {
   if (fs.existsSync(iconsPath) && fs.lstatSync(iconsPath).isDirectory()) {
     winston.info(`Using ${iconsPath} as icon directory.`);
     app.use("/img/", serveStatic(iconsPath));
+  } else {
+    winston.warn(`${iconsPath} is not a valid directory. Skipping images`);
   }
 }
 

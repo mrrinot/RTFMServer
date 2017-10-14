@@ -11,6 +11,8 @@
   "rules": {
     "prettier/prettier": "error",
     "class-methods-use-this": "off",
+    "consistent-return": "off",
+    "no-shadow": ["error", { "allow": ["done", "err"] }],
     "camelcase": "off",
     "prefer-destructuring": ["error", { "VariableDeclarator": { "object": true } }]
   }
