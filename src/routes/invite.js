@@ -20,6 +20,7 @@ router.post("/:token", (req, res) => {
       const acc = await User.find({
         where: {
           email,
+          invitationToken,
         },
       });
       acc.setPassword(password);

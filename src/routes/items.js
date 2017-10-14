@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require("express");
-const Item = require("../models/S_Item");
+const Item = require("../models/static/S_Item");
 const Sequelize = require("sequelize");
 
 const router = express.Router();

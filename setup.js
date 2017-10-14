@@ -18,10 +18,10 @@ const bcrypt = require("bcrypt");
 
 (async function() {
   await sequelize.sync({ force: true });
-  const dataPath = path.resolve(process.cwd(), nconf.get("dataPath"));
+  const dataPath = path.resolve(process.cwd(), path.join(nconf.get("dataPath"), "d2o"));
   winston.info(`Loading from ${dataPath}`);
 
-  const makePath = file => path.join(dataPath, `/${file}.json`);
+  const makePath = file => path.join(dataPath, `${file}.json`);
 
   let jobs = require(`${makePath("Jobs")}`);
 
@@ -69,7 +69,10 @@ const bcrypt = require("bcrypt");
   let items = require(`${makePath("Items")}`);
   try {
     winston.info(`Parsing items... ${items.length} entries`);
-    items = items.map(item => S_Item.convert(item));
+    items = items.map(item => {
+      // item.criteria
+      S_Item.convert(item);
+    });
     await S_Item.bulkCreate(items, { validate: true });
     winston.info("Items parsed...");
   } catch (e) {
