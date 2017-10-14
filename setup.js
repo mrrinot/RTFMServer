@@ -5,6 +5,7 @@
 const winston = require("winston");
 const nconf = require("nconf");
 const path = require("path");
+const bcrypt = require("bcrypt");
 
 require("./src/tools/confSetup");
 const User = require("./src/models/User");
@@ -13,17 +14,17 @@ const S_Item = require("./src/models/static/S_Item");
 const S_ItemType = require("./src/models/static/S_ItemType");
 const S_Ingredient = require("./src/models/static/S_Ingredient");
 const S_Recipe = require("./src/models/static/S_Recipe");
+const S_Effect = require("./src/models/static/S_Effect");
+const S_PossibleEffect = require("./src/models/static/S_PossibleEffect");
 const sequelize = require("./src/sequelize");
-const bcrypt = require("bcrypt");
+const DataManager = require("./src/conversion/DataManager");
 
 (async function() {
   await sequelize.sync({ force: true });
-  const dataPath = path.resolve(process.cwd(), nconf.get("dataPath"));
-  winston.info(`Loading from ${dataPath}`);
 
-  const makePath = file => path.join(dataPath, `/${file}.json`);
+  const data = file => DataManager[file];
 
-  let jobs = require(`${makePath("Jobs")}`);
+  let jobs = data("Jobs");
 
   //        _       _
   //       | | ___ | |__  ___
@@ -48,7 +49,7 @@ const bcrypt = require("bcrypt");
   //    | || ||  __/ | | | | | || |_| | |_) |  __/\__ \
   //   |___|\__\___|_| |_| |_|_| \__, | .__/ \___||___/
   //                             |___/|_|
-  let itemTypes = require(`${makePath("ItemTypes")}`);
+  let itemTypes = data("ItemTypes");
   try {
     winston.info(`Parsing itemTypes... ${itemTypes.length} entries`);
     itemTypes = itemTypes.map(itemType => S_ItemType.convert(itemType));
@@ -60,13 +61,32 @@ const bcrypt = require("bcrypt");
     process.exit(1);
   }
 
+  //    _____   __   __              _
+  //   | ____| / _| / _|  ___   ___ | |_  ___
+  //   |  _|  | |_ | |_  / _ \ / __|| __|/ __|
+  //   | |___ |  _||  _||  __/| (__ | |_ \__ \
+  //   |_____||_|  |_|   \___| \___| \__||___/
+  //
+  let effects = data("Effects");
+  try {
+    winston.info(`Parsing effects... ${effects.length} entries`);
+    effects = effects.map(effect => S_Effect.convert(effect));
+    await S_Effect.bulkCreate(effects, { validate: true });
+    winston.info("Effects parsed...");
+  } catch (e) {
+    winston.error("Unable to parse effects.");
+    console.log(e);
+    process.exit(1);
+  }
+
   //    ___ _
   //   |_ _| |_ ___ _ __ ___  ___
   //    | || __/ _ \ '_ ` _ \/ __|
   //    | || ||  __/ | | | | \__ \
   //   |___|\__\___|_| |_| |_|___/
   //
-  let items = require(`${makePath("Items")}`);
+  const originalItems = data("Items");
+  let items = originalItems;
   try {
     winston.info(`Parsing items... ${items.length} entries`);
     items = items.map(item => S_Item.convert(item));
@@ -78,13 +98,37 @@ const bcrypt = require("bcrypt");
     process.exit(1);
   }
 
+  //    ____                   _  _      _        _____   __   __              _
+  //   |  _ \  ___   ___  ___ (_)| |__  | |  ___ | ____| / _| / _|  ___   ___ | |_  ___
+  //   | |_) |/ _ \ / __|/ __|| || '_ \ | | / _ \|  _|  | |_ | |_  / _ \ / __|| __|/ __|
+  //   |  __/| (_) |\__ \\__ \| || |_) || ||  __/| |___ |  _||  _||  __/| (__ | |_ \__ \
+  //   |_|    \___/ |___/|___/|_||_.__/ |_| \___||_____||_|  |_|   \___| \___| \__||___/
+  //
+  /*items = originalItems;
+  try {
+    winston.info(`Creating possibleEffects for items...`);
+    const possibleEffects = [];
+    items.forEach((item, idx) => {
+      item.possibleEffects.forEach(effect => {
+        possibleEffects.push({ ...S_PossibleEffect.convert(effect), sItemId: item.id });
+      });
+    });
+    winston.info(`${possibleEffects.length} possibleEffects found...`);
+    await S_PossibleEffect.bulkCreate(possibleEffects, { validate: true });
+    winston.info("PossibleEffects created...");
+  } catch (e) {
+    winston.error("Unable to create possibleEffects.");
+    console.log(e);
+    process.exit(1);
+  }*/
+
   //    ____           _
   //   |  _ \ ___  ___(_)_ __   ___  ___
   //   | |_) / _ \/ __| | '_ \ / _ \/ __|
   //   |  _ <  __/ (__| | |_) |  __/\__ \
   //   |_| \_\___|\___|_| .__/ \___||___/
   //                    |_|
-  const originalRecipes = require(`${makePath("Recipes")}`);
+  const originalRecipes = data("Recipes");
   let recipes = originalRecipes;
   try {
     winston.info(`Parsing recipes... ${recipes.length} entries`);
@@ -136,17 +180,13 @@ const bcrypt = require("bcrypt");
     await User.create(user);
   } catch (e) {
     winston.error("Unable to add dummy user");
-    winston.error(e);
+    console.log(e);
     process.exit(1);
   }
 
-  const recipeBois = await S_Recipe.findOne({
-    where: { resultId: 44 },
-    include: [
-      { model: S_Item, as: "ingredients" },
-      { model: S_Item, as: "result" },
-      { model: S_Job, as: "job" },
-    ],
+  const recipeBois = await S_Item.findOne({
+    where: { id: 8993 },
+    include: [{ model: S_PossibleEffect, as: "possibleEffects" }],
   });
 
   console.log(JSON.stringify(recipeBois.get({ plain: true }), null, 4));
