@@ -14,6 +14,7 @@ const S_ItemType = require("./src/models/S_ItemType");
 const S_Ingredient = require("./src/models/S_Ingredient");
 const S_Recipe = require("./src/models/S_Recipe");
 const sequelize = require("./src/sequelize");
+const bcrypt = require("bcrypt");
 
 (async function() {
   await sequelize.sync({ force: true });
@@ -121,6 +122,21 @@ const sequelize = require("./src/sequelize");
   } catch (e) {
     winston.error("Unable to create ingredients.");
     console.log(e);
+    process.exit(1);
+  }
+
+  try {
+    winston.info("Creating dummy user");
+    const user = {
+      email: "test@test.com",
+      pseudo: "SuperCoolGuy",
+      adminLevel: 3,
+      password: bcrypt.hashSync("pass", nconf.get("bcrypt_rounds")),
+    };
+    await User.create(user);
+  } catch (e) {
+    winston.error("Unable to add dummy user");
+    winston.error(e);
     process.exit(1);
   }
 

@@ -81,7 +81,23 @@ User.prototype.generateJWT = function generateJWT() {
 };
 
 User.prototype.toAuthJSON = function toAuthJSON() {
-  return { email: this.email, token: this.generateJWT() };
+  return {
+    email: this.email,
+    adminLevel: this.adminLevel,
+    pseudo: this.pseudo,
+    invitationToken: this.invitationToken,
+  };
+};
+
+User.prototype.toSessionUser = function toSessionUser() {
+  return {
+    email: this.email,
+    adminLevel: this.adminLevel,
+    pseudo: this.pseudo,
+    invitationToken: this.invitationToken,
+    password: this.password,
+    id: this.id,
+  };
 };
 
 User.prototype.generateInvitationUrl = function generateInvitationUrl() {
