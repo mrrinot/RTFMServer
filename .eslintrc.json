@@ -10,6 +10,8 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "camelcase": "off"
+    "class-methods-use-this": "off",
+    "camelcase": "off",
+    "prefer-destructuring": ["error", { "VariableDeclarator": { "object": true } }]
   }
 }

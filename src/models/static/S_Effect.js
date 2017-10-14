@@ -1,7 +1,7 @@
 "use strict";
 
 const Sequelize = require("sequelize");
-const sequelize = require("../sequelize");
+const sequelize = require("../../sequelize");
 
 const S_Effect = sequelize.define(
   "s_effect",

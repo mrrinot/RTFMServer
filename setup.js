@@ -7,12 +7,12 @@ const nconf = require("nconf");
 const path = require("path");
 
 require("./src/tools/confSetup");
-const S_Job = require("./src/models/S_Job");
-const S_Item = require("./src/models/S_Item");
 const User = require("./src/models/User");
-const S_ItemType = require("./src/models/S_ItemType");
-const S_Ingredient = require("./src/models/S_Ingredient");
-const S_Recipe = require("./src/models/S_Recipe");
+const S_Job = require("./src/models/static/S_Job");
+const S_Item = require("./src/models/static/S_Item");
+const S_ItemType = require("./src/models/static/S_ItemType");
+const S_Ingredient = require("./src/models/static/S_Ingredient");
+const S_Recipe = require("./src/models/static/S_Recipe");
 const sequelize = require("./src/sequelize");
 const bcrypt = require("bcrypt");
 
