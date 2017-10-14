@@ -3,7 +3,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../../sequelize");
 const S_ItemType = require("./S_ItemType");
-const S_Effect = require("./S_Effect");
+const S_PossibleEffect = require("./S_PossibleEffect");
 
 const S_Item = sequelize.define(
   "s_item",
@@ -46,7 +46,7 @@ S_Item.belongsTo(S_ItemType, {
   foreignKey: "typeId",
 });
 
-S_Item.hasMany(S_Effect);
+S_Item.hasMany(S_PossibleEffect, { as: "possibleEffects" });
 
 S_Item.convert = function convertItem(item) {
   return {

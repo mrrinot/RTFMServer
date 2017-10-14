@@ -6,20 +6,9 @@ const sequelize = require("../../sequelize");
 const S_Effect = sequelize.define(
   "s_effect",
   {
-    text: {
+    description: {
       type: Sequelize.STRING,
-    },
-    min: {
-      type: Sequelize.INTEGER,
-    },
-    max: {
-      type: Sequelize.INTEGER,
-    },
-    sign: {
-      type: Sequelize.STRING(1),
-      validate: {
-        isIn: ["+", "-"],
-      },
+      allowNull: false,
     },
   },
   {
@@ -30,7 +19,7 @@ const S_Effect = sequelize.define(
 S_Effect.convert = function convertS_Effect(effect) {
   return {
     id: effect.id,
-    name: effect.nameId_string,
+    description: effect.descriptionId_string || "",
   };
 };
 

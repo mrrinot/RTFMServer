@@ -17,6 +17,7 @@
         "express-session": "^1.15.6",
         "jsonwebtoken": "^8.1.0",
         "jwt-decode": "^2.2.0",
+        "lodash": "^4.17.4",
         "nconf": "^0.8.5",
         "node-mailjet": "^3.2.1",
         "passport": "^0.4.0",

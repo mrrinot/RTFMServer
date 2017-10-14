@@ -6,7 +6,7 @@ const Sequelize = require("sequelize");
 
 const router = express.Router();
 
-const { Op, fn, col, where } = Sequelize;
+const { fn, col, where } = Sequelize;
 
 router.get("/:input", async (req, res) => {
   const inputValue = req.params.input.toLowerCase();
@@ -19,4 +19,5 @@ router.get("/:input", async (req, res) => {
   });
   res.json(items);
 });
+
 module.exports = router;
