@@ -60,6 +60,10 @@ S_PossibleEffect.convert = function convertS_PossibleEffect(effect) {
   const descrToDo = effectModel.theoreticalDescriptionId_string || effectModel.descriptionId_string;
   const description = effectInstance.prepareDescription(descrToDo, effectId);
 
+  if (description === null) {
+    return null;
+  }
+
   return {
     min,
     max,
