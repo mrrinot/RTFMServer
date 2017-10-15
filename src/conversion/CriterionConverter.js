@@ -97,6 +97,37 @@ const converters = {
     if (value === 1) return "ui.tooltip.beFemale";
     return "ui.tooltip.beMale";
   },
+  PT: sign => {
+    if (sign === "=") return "ui.criterion.gotSpell";
+    return "ui.criterion.doesntGotSpell";
+  },
+  Pw: sign => {
+    if (sign === "=") return "ui.criterion.hasGuild";
+    return "ui.criterion.noGuild";
+  },
+  Px: sign => {
+    if (sign === "=") return "ui.criterion.guildRights";
+    return "ui.criterion.notGuildRights";
+  },
+  PX: "ui.social.guildHouseRights",
+  Pz: "",
+  Py: "ui.guild.guildLevel",
+  PZ: sign => {
+    if (sign === "=") return "ui.tooltip.beSubscirber";
+    return "ui.tooltip.dontBeSubscriber";
+  },
+  Qa: "ui.grimoire.quest.active",
+  Qc: "ui.grimoire.quest.startable",
+  Qf: "ui.grimoire.quest.done",
+  MK: "ui.criterion.MK",
+  Sc: "",
+  SG: "ui.time.months",
+  Sd: "ui.time.days",
+  SI: "ui.header.server",
+  Sy: sign => {
+    if (sign === "=") return "ui.criterion.community";
+    return "ui.criterion.notCommunity";
+  },
 };
 
 const staticConverters = {
