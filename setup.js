@@ -107,13 +107,16 @@ const DataManager = require("./src/conversion/DataManager");
   //   |  __/| (_) |\__ \\__ \| || |_) || ||  __/| |___ |  _||  _||  __/| (__ | |_ \__ \
   //   |_|    \___/ |___/|___/|_||_.__/ |_| \___||_____||_|  |_|   \___| \___| \__||___/
   //
-  /*items = originalItems;
+  items = originalItems;
   try {
     winston.info(`Creating possibleEffects for items...`);
     const possibleEffects = [];
     items.forEach((item, idx) => {
       item.possibleEffects.forEach(effect => {
-        possibleEffects.push({ ...S_PossibleEffect.convert(effect), sItemId: item.id });
+        const convertedEffect = S_PossibleEffect.convert(effect);
+        if (convertedEffect) {
+          possibleEffects.push({ ...convertedEffect, sItemId: item.id });
+        }
       });
     });
     winston.info(`${possibleEffects.length} possibleEffects found...`);
@@ -123,7 +126,7 @@ const DataManager = require("./src/conversion/DataManager");
     winston.error("Unable to create possibleEffects.");
     console.log(e);
     process.exit(1);
-  }*/
+  }
 
   //    ____           _
   //   |  _ \ ___  ___(_)_ __   ___  ___
@@ -188,7 +191,7 @@ const DataManager = require("./src/conversion/DataManager");
   }
 
   const recipeBois = await S_Item.findOne({
-    where: { id: 8993 },
+    where: { id: 694 },
     include: [{ model: S_PossibleEffect, as: "possibleEffects" }],
   });
 

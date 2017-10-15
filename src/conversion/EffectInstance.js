@@ -34,9 +34,102 @@ class EffectInstance {
     return this.p5;
   }
 
+  getEmoticonName(param1) {
+    const { Emoticons } = DataManager;
+    const emoticon = _.find(Emoticons, ["id", param1]);
+    return emoticon ? emoticon.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getItemTypeName(param1) {
+    const { ItemTypes } = DataManager;
+    const itemType = _.find(ItemTypes, ["id", param1]);
+    return itemType ? itemType.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getMonsterName(param1) {
+    const { Monsters } = DataManager;
+    const monster = _.find(Monsters, ["id", param1]);
+    return monster ? monster.nameId_string : I18n.getUiText("ui.effect.unknownMonster");
+  }
+
+  getCompanionName(id) {
+    const { Companions } = DataManager;
+    const companion = _.find(Companions, ["id", id]);
+    return companion ? companion.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getMonsterGrade(id, grade) {
+    const { Monsters } = DataManager;
+    const monster = _.find(Monsters, ["id", id]);
+    return monster ? monster.getMonsterGrade(grade).level.toString() : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getSpellName(id) {
+    const { Spells } = DataManager;
+    const spell = _.find(Spells, ["id", id]);
+    return spell ? spell.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getSpellLevelName(spellLvlId) {
+    const { SpellLevels } = DataManager;
+    const spellLevel = _.find(SpellLevels, ["id", spellLvlId]);
+    const spellName = spellLevel
+      ? this.getSpellName(spellLevel.spellId)
+      : EffectInstance.UNKNOWN_NAME;
+    return spellName;
+  }
+
+  getJobName(jobId) {
+    const { Jobs } = DataManager;
+    const job = _.find(Jobs, ["id", jobId]);
+    return job ? job.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getDocumentTitle(param1) {
+    const { Documents } = DataManager;
+    const document = _.find(Documents, ["id", param1]);
+    return document ? document.title : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getAlignmentSideName(param1) {
+    const { AlignmentSides } = DataManager;
+    const alignmentSide = _.find(AlignmentSides, ["id", param1]);
+    return alignmentSide ? alignmentSide.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getItemName(param1) {
+    const { Items } = DataManager;
+    const item = _.find(Items, ["id", param1]);
+    return item ? item.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getMonsterSuperRaceName(param1) {
+    const { MonsterSuperRaces } = DataManager;
+    const monsterSuperRace = _.find(MonsterSuperRaces, ["id", param1]);
+    return monsterSuperRace ? monsterSuperRace.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getMonsterRaceName(param1) {
+    const { MonsterRaces } = DataManager;
+    const monsterRace = _.find(MonsterRaces, ["id", param1]);
+    return monsterRace ? monsterRace.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getTitleName(param1) {
+    const { Titles } = DataManager;
+    const title = _.find(Titles, ["id", param1]);
+    return title ? title.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
+  getMountFamilyName(param1) {
+    const { MountFamilys } = DataManager;
+    const mountFamily = _.find(MountFamilys, ["id", param1]);
+    return mountFamily ? mountFamily.nameId_string : EffectInstance.UNKNOWN_NAME;
+  }
+
   prepareDescription(descriptionStr, effectId) {
     if (!descriptionStr) {
-      return `__NOT_DECODED__ (${effectId})`;
+      return null;
     }
     let paramArray = [];
     let resultStr = "";
@@ -178,7 +271,7 @@ class EffectInstance {
             paramArray[0] = I18n.getUiText("ui.petWeight.fat", [paramArray[1]]);
           } else if (paramArray[2] > 6) {
             paramArray[0] = I18n.getUiText("ui.petWeight.lean", [paramArray[2]]);
-          } else if (/* this instanceof EffectInstanceInteger && */ paramArray[0] > 6) {
+          } else if (paramArray[0] > 6) {
             paramArray[0] = I18n.getUiText("ui.petWeight.lean", [paramArray[0]]);
           } else {
             paramArray[0] = I18n.getUiText("ui.petWeight.nominal");
@@ -219,7 +312,7 @@ class EffectInstance {
             if (loc9.isSilent) {
               return "";
             }
-            paramArray[2] = loc9.name;
+            paramArray[2] = loc9.nameId_string;
           } else {
             paramArray[2] = EffectInstance.UNKNOWN_NAME;
           }
@@ -246,19 +339,19 @@ class EffectInstance {
         case 805:
         case 808:
         case 983: {
-          if (paramArray[0] === undefined && paramArray[1] === undefined && paramArray[2] > 0) {
+          if (!paramArray[0] && !paramArray[1] && paramArray[2] > 0) {
             paramArray[0] = paramArray[2];
             break;
           }
-          if (paramArray[0] === null && paramArray[1] === null && paramArray[2] === null) {
+          if (!paramArray[0] && !paramArray[1] && !paramArray[2]) {
             break;
           }
-          paramArray[2] = paramArray[2] === undefined ? 0 : paramArray[2];
-          const year = paramArray[0];
-          const month = paramArray[1].substr(0, 2);
-          const day = paramArray[1].substr(2, 2);
-          const hour = paramArray[2].substr(0, 2);
-          const minutes = paramArray[2].substr(2, 2);
+          paramArray[2] = paramArray[2] || 0;
+          const year = `${paramArray[0]}`;
+          const month = `${paramArray[1]}`.substr(0, 2);
+          const day = `${paramArray[1]}`.substr(2, 2);
+          const hour = `${paramArray[2]}`.substr(0, 2);
+          const minutes = `${paramArray[2]}`.substr(2, 2);
           paramArray[0] = `${day}/${month}/${year} ${hour}:${minutes}`;
           break;
         }

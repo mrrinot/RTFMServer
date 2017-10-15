@@ -4,6 +4,10 @@ const path = require("path");
 const nconf = require("nconf");
 const winston = require("winston");
 
+if (!nconf.get("langPath")) {
+  winston.error("You forgot the option --langPath to specify the translation");
+  process.exit(1);
+}
 const langPath = path.resolve(process.cwd(), nconf.get("langPath"));
 winston.info(`Loading lang from ${langPath}`);
 const langData = require(langPath); // eslint-disable-line
