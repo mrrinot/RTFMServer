@@ -16,6 +16,8 @@ const S_Ingredient = require("./src/models/static/S_Ingredient");
 const S_Recipe = require("./src/models/static/S_Recipe");
 const S_Effect = require("./src/models/static/S_Effect");
 const S_PossibleEffect = require("./src/models/static/S_PossibleEffect");
+const ItemData = require("./src/models/ItemData");
+const ItemDescription = require("./src/models/ItemDescription");
 const sequelize = require("./src/sequelize");
 const DataManager = require("./src/conversion/DataManager");
 const CriterionConverter = require("./src/conversion/CriterionConverter");
@@ -172,6 +174,37 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     // console.log(e);
     process.exit(1);
   }
+
+  const crawled = {
+    itemId: 10235,
+    averagePrice: 153592,
+    timestamp: 1507228789411,
+    itemDescriptions: [
+      {
+        objectUID: 751478,
+        effects: [
+          {
+            typeId: 73,
+            actionId: 628,
+            diceNum: 5,
+            diceSide: 0,
+            diceConst: 113,
+          },
+        ],
+        prices: [18, 0, 0],
+      },
+    ],
+  };
+
+  await ItemData.create(crawled, {
+    include: [{ model: ItemDescription, as: "itemDescriptions" }],
+  });
+
+  const result = await ItemData.findAll({
+    include: [{ model: ItemDescription, as: "itemDescriptions" }],
+  });
+
+  console.log(JSON.stringify(result[0].get({ plain: true }), null, 4));
 
   try {
     winston.info("Creating dummy user");
