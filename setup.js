@@ -18,6 +18,7 @@ const S_Effect = require("./src/models/static/S_Effect");
 const S_PossibleEffect = require("./src/models/static/S_PossibleEffect");
 const sequelize = require("./src/sequelize");
 const DataManager = require("./src/conversion/DataManager");
+const CriterionConverter = require("./src/conversion/CriterionConverter");
 
 (async function() {
   await sequelize.sync({ force: true });
@@ -89,10 +90,7 @@ const DataManager = require("./src/conversion/DataManager");
   let items = originalItems;
   try {
     winston.info(`Parsing items... ${items.length} entries`);
-    items = items.map(item => {
-      // item.criteria
-      S_Item.convert(item);
-    });
+    items = items.map(item => S_Item.convert(item));
     await S_Item.bulkCreate(items, { validate: true });
     winston.info("Items parsed...");
   } catch (e) {
@@ -124,7 +122,7 @@ const DataManager = require("./src/conversion/DataManager");
     winston.info("PossibleEffects created...");
   } catch (e) {
     winston.error("Unable to create possibleEffects.");
-    console.log(e);
+    // console.log(e);
     process.exit(1);
   }
 
@@ -143,7 +141,7 @@ const DataManager = require("./src/conversion/DataManager");
     winston.info("Recipes parsed...");
   } catch (e) {
     winston.error("Unable to parse recipes.");
-    console.log(e);
+    // console.log(e);
     process.exit(1);
   }
 
@@ -171,7 +169,7 @@ const DataManager = require("./src/conversion/DataManager");
     winston.info("Ingredients created...");
   } catch (e) {
     winston.error("Unable to create ingredients.");
-    console.log(e);
+    // console.log(e);
     process.exit(1);
   }
 
@@ -195,5 +193,5 @@ const DataManager = require("./src/conversion/DataManager");
     include: [{ model: S_PossibleEffect, as: "possibleEffects" }],
   });
 
-  console.log(JSON.stringify(recipeBois.get({ plain: true }), null, 4));
+  // console.log(JSON.stringify(recipeBois.get({ plain: true }), null, 4));
 })();

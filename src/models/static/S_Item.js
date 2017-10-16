@@ -4,6 +4,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../../sequelize");
 const S_ItemType = require("./S_ItemType");
 const S_PossibleEffect = require("./S_PossibleEffect");
+const CriterionConverter = require("../../conversion/CriterionConverter");
 
 const S_Item = sequelize.define(
   "s_item",
@@ -27,6 +28,9 @@ const S_Item = sequelize.define(
     },
     criteria: {
       type: Sequelize.STRING,
+      set(val) {
+        this.setDataValue("criteria", `${val} | ${CriterionConverter.ConvertCriterion(val)}`);
+      },
     },
     ethereal: {
       type: Sequelize.BOOLEAN,
