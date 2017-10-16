@@ -285,7 +285,6 @@ function extractCriteria(criterion, pos) {
 class CriterionConverter {
   static ConvertCriterion(criterion) {
     if (criterion === null || criterion === undefined || criterion.length === 0) return "";
-    console.log(criterion);
     let finalStr = "";
     let i = 0;
     let lastVal = "";

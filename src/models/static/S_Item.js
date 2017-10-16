@@ -29,7 +29,7 @@ const S_Item = sequelize.define(
     criteria: {
       type: Sequelize.STRING,
       set(val) {
-        this.setDataValue("criteria", `${val} | ${CriterionConverter.ConvertCriterion(val)}`);
+        this.setDataValue("criteria", CriterionConverter.ConvertCriterion(val));
       },
     },
     ethereal: {
