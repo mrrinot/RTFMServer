@@ -142,12 +142,12 @@ const dataToLoad = [
 
 if (!nconf.get("dataPath")) {
   winston.error("You forgot the option --dataPath to specify the data directory");
-  process.exit(1);
-}
-const dataPath = path.resolve(process.cwd(), nconf.get("dataPath"));
-winston.info(`Loading from ${dataPath}`);
-const makePath = file => path.join(dataPath, `${file}.json`);
+} else {
+  const dataPath = path.resolve(process.cwd(), nconf.get("dataPath"));
+  winston.info(`Loading from ${dataPath}`);
+  const makePath = file => path.join(dataPath, `${file}.json`);
 
-dataToLoad.forEach(data => {
-  exports[data] = require(`${makePath(data)}`); // eslint-disable-line
-});
+  dataToLoad.forEach(data => {
+    exports[data] = require(`${makePath(data)}`); // eslint-disable-line
+  });
+}
