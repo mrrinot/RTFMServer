@@ -1,19 +1,20 @@
 {
-  "extends": ["airbnb-base", "prettier"],
-  "env": {
-    "node": true
-  },
-  "parserOptions": {
-    "ecmaVersion": 2017,
-    "sourceType": "script"
-  },
-  "plugins": ["prettier"],
-  "rules": {
-    "prettier/prettier": "error",
-    "class-methods-use-this": "off",
-    "consistent-return": "off",
-    "no-shadow": ["error", { "allow": ["done", "err"] }],
-    "camelcase": "off",
-    "prefer-destructuring": ["error", { "VariableDeclarator": { "object": true } }]
-  }
+    "extends": ["airbnb-base", "prettier"],
+    "env": {
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "sourceType": "script"
+    },
+    "plugins": ["prettier"],
+    "rules": {
+        "prettier/prettier": "error",
+        "class-methods-use-this": "off",
+        "consistent-return": "off",
+        "no-plusplus": "off",
+        "no-shadow": ["error", { "allow": ["done", "err"] }],
+        "camelcase": "off",
+        "prefer-destructuring": ["error", { "VariableDeclarator": { "object": true } }]
+    }
 }
