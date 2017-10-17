@@ -32,13 +32,16 @@ const S_Item = sequelize.define(
         this.setDataValue("criteria", CriterionConverter.ConvertCriterion(val));
       },
     },
-    ethereal: {
+    etheral: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
     description: {
       type: Sequelize.TEXT,
     },
+    weight: {
+      type: Sequelize.INTEGER,
+    }
   },
   {
     timestamps: false,
@@ -60,7 +63,8 @@ S_Item.convert = function convertItem(item) {
     name: item.nameId_string,
     criticalHitProbability: item.criticalHitProbability,
     criteria: item.criteria,
-    ethereal: item.ethereal,
+    weight: item.realWeight,
+    etheral: item.etheral,
     description: item.descriptionId_string,
     typeId: item.typeId,
   };
