@@ -61,7 +61,7 @@ class EffectInstance {
   getMonsterGrade(id, grade) {
     const { Monsters } = DataManager;
     const monster = _.find(Monsters, ["id", id]);
-    return monster ? monster.getMonsterGrade(grade).level.toString() : EffectInstance.UNKNOWN_NAME;
+    return monster ? monster.grades[grade - 1].level.toString() : EffectInstance.UNKNOWN_NAME;
   }
 
   getSpellName(id) {
