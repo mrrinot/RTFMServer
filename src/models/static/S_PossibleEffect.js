@@ -35,6 +35,12 @@ const S_PossibleEffect = sequelize.define(
       defaultValue: "",
       allowNull: false,
     },
+    bonusType: {
+      type: Sequelize.INTEGER,
+    },
+    useInFight: {
+      type: Sequelize.BOOLEAN,
+    },
   },
   {
     timestamps: false,
@@ -71,6 +77,8 @@ S_PossibleEffect.convert = function convertS_PossibleEffect(effect) {
     characteristic: effectModel.characteristic,
     value,
     effectId,
+    bonusType: effectModel.bonusType,
+    useInFight: effectModel.useInFight,
   };
 };
 

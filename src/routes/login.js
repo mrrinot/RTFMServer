@@ -5,15 +5,6 @@ const passport = require("passport");
 
 const router = express.Router();
 
-// router.post("/", passport.authenticate("local"), async (req, res) => {
-//   const userInfos = {
-//     email: req.user.email,
-//     adminLevel: req.user.adminLevel,
-//     pseudo: req.user.pseudo,
-//   };
-//   res.json(userInfos);
-// });
-
 router.post("/", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -30,6 +21,7 @@ router.post("/", (req, res, next) => {
         email: req.user.email,
         adminLevel: req.user.adminLevel,
         pseudo: req.user.pseudo,
+        APIKey: req.user.APIKey,
       };
       return res.json(userInfos);
     });

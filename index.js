@@ -13,6 +13,7 @@ const User = require("./src/models/User");
 const login = require("./src/routes/login");
 const invite = require("./src/routes/invite");
 const items = require("./src/routes/items");
+const APIKey = require("./src/routes/APIKey")
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
@@ -65,6 +66,7 @@ app.use(passport.session());
 app.use("/login", login);
 app.use("/items", items);
 app.use("/invite", invite);
+app.use("/createAPIKey", APIKey);
 
 let iconsPath = nconf.get("iconsPath");
 

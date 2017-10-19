@@ -21,6 +21,10 @@ const ItemData = sequelize.define(
       type: Sequelize.INTEGER,
       allowNull: false,
     },
+    serverId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    }
   },
   {
     timestamps: false,

@@ -41,6 +41,30 @@ const S_Item = sequelize.define(
     },
     weight: {
       type: Sequelize.INTEGER,
+    },
+    criticalHitProbability: {
+      type: Sequelize.INTEGER,
+      defaultValue: -1,
+    },
+    range: {
+      type: Sequelize.INTEGER,
+      defaultValue: -1,      
+    },
+    minRange: {
+      type: Sequelize.INTEGER,
+      defaultValue: -1,      
+    },
+    apCost: {
+      type: Sequelize.INTEGER,
+      defaultValue: -1,
+    },
+    criticalHitBonus: {
+      type: Sequelize.INTEGER,
+      defaultValue: -1,
+    },
+    maxCastPerTurn: {
+      type: Sequelize.INTEGER,
+      defaultValue: -1,
     }
   },
   {
@@ -66,6 +90,12 @@ S_Item.convert = function convertItem(item) {
     weight: item.realWeight,
     etheral: item.etheral,
     description: item.descriptionId_string,
+    range: item.range,
+    minRange: item.minRange,
+    criticalHitBonus: item.criticalHitBonus,
+    criticalHitProbability: item.criticalHitProbability,
+    apCost: item.apCost,
+    maxCastPerTurn: item.maxCastPerTurn,
     typeId: item.typeId,
   };
 };
