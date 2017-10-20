@@ -16,6 +16,7 @@ const S_Ingredient = require("./src/models/static/S_Ingredient");
 const S_Recipe = require("./src/models/static/S_Recipe");
 const S_Effect = require("./src/models/static/S_Effect");
 const S_PossibleEffect = require("./src/models/static/S_PossibleEffect");
+const S_Server = require("./src/models/static/S_Server");
 const ItemData = require("./src/models/ItemData");
 const ItemDescription = require("./src/models/ItemDescription");
 const sequelize = require("./src/sequelize");
@@ -23,7 +24,7 @@ const DataManager = require("./src/conversion/DataManager");
 const CriterionConverter = require("./src/conversion/CriterionConverter");
 
 (async function() {
-  await sequelize.sync({ force: true });
+  await sequelize.sync({ force: !nconf.get("noSync") });
 
   const data = file => DataManager[file];
 
@@ -175,9 +176,24 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     process.exit(1);
   }
 
+  // Server (plz cedric)
+
+  let servers = data("Servers");
+  try {
+    winston.info(`Parsing servers... ${servers.length} entries`);
+    servers = servers.map(server => S_Server.convert(server));
+    await S_Server.bulkCreate(servers, { validate: true });
+    winston.info("Servers parsed...");
+  } catch (e) {
+    winston.error("Unable to create servers.");
+    console.log(e);
+    process.exit(1);
+  }
+
   const crawled = {
     itemId: 10235,
     averagePrice: 153592,
+    serverId: 217,
     timestamp: 1507228789411,
     itemDescriptions: [
       {

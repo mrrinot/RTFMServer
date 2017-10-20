@@ -50,9 +50,9 @@ const User = sequelize.define("user", {
       this.setDataValue("invitationToken", this.generateInvitationToken());
     },
   },
-    APIKey:{
-      type: Sequelize.UUIDV4,
-      allowNull: true,
+  APIKey: {
+    type: Sequelize.UUIDV4,
+    allowNull: true,
   },
 });
 
@@ -90,7 +90,7 @@ User.prototype.toAuthJSON = function toAuthJSON() {
     adminLevel: this.adminLevel,
     pseudo: this.pseudo,
     invitationToken: this.invitationToken,
-    APIKey: this.APIKey
+    APIKey: this.APIKey,
   };
 };
 
@@ -102,7 +102,7 @@ User.prototype.toSessionUser = function toSessionUser() {
     invitationToken: this.invitationToken,
     password: this.password,
     id: this.id,
-    APIKey: this.APIKey
+    APIKey: this.APIKey,
   };
 };
 

@@ -42,17 +42,13 @@ const S_Item = sequelize.define(
     weight: {
       type: Sequelize.INTEGER,
     },
-    criticalHitProbability: {
+    range: {
       type: Sequelize.INTEGER,
       defaultValue: -1,
     },
-    range: {
-      type: Sequelize.INTEGER,
-      defaultValue: -1,      
-    },
     minRange: {
       type: Sequelize.INTEGER,
-      defaultValue: -1,      
+      defaultValue: -1,
     },
     apCost: {
       type: Sequelize.INTEGER,
@@ -65,7 +61,7 @@ const S_Item = sequelize.define(
     maxCastPerTurn: {
       type: Sequelize.INTEGER,
       defaultValue: -1,
-    }
+    },
   },
   {
     timestamps: false,
@@ -93,7 +89,6 @@ S_Item.convert = function convertItem(item) {
     range: item.range,
     minRange: item.minRange,
     criticalHitBonus: item.criticalHitBonus,
-    criticalHitProbability: item.criticalHitProbability,
     apCost: item.apCost,
     maxCastPerTurn: item.maxCastPerTurn,
     typeId: item.typeId,

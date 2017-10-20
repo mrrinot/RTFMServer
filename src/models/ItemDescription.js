@@ -40,7 +40,10 @@ const ItemDescription = sequelize.define(
           const effectId = effect.actionId;
 
           const effectModel = _.find(DataManager.Effects, ["id", effectId]);
-
+          if (effectModel === undefined) {
+            console.log(effect);
+            return { ...effect, description: "" };
+          }
           const description = instance.prepareDescription(
             effectModel.descriptionId_string,
             effectId,

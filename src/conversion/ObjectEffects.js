@@ -33,7 +33,6 @@ const types = {
   179: effect => new EffectInstance(effect.date, effect.modelId, effect.mountId),
 };
 
-module.exports = ({ typeId, ...rest }) => {
-  console.log(typeId, rest);
-  return types[typeId](rest);
-};
+module.exports = ({ typeId, ...rest }) =>
+  // console.log(typeId, rest);
+  types[typeId](rest);

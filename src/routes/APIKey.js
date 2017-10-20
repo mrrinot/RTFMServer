@@ -10,15 +10,14 @@ const router = express.Router();
 const { fn, col, where } = Sequelize;
 
 router.post("/", async (req, res) => {
-    if (req.isAuthenticated())
-    {
-const account = await User.findById(req.user.id);   
+  if (req.isAuthenticated()) {
+    const account = await User.findById(req.user.id);
     account.APIKey = uuid();
     account.save();
-    res.json({key: account.APIKey});
-    }
-    else{
-        res.status(401).json({errors: {global: "Please login."}});    }
+    res.json({ key: account.APIKey });
+  } else {
+    res.status(401).json({ errors: { global: "Please login." } });
+  }
 });
 
 module.exports = router;
