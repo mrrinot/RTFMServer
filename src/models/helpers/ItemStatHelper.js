@@ -32,7 +32,7 @@ class ItemStatHelper {
         { model: S_Server, as: "server" },
         { model: ItemDescription, as: "itemDescriptions" },
       ],
-      order: [["timestamp", "DESC"]],
+      order: [["timestamp", "ASC"]],
     });
     return res;
   }
