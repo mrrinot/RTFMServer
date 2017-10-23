@@ -12,7 +12,7 @@ nconf.overrides({
 });
 
 nconf.argv();
-nconf.env("__");
+nconf.env();
 
 nconf.defaults({
   config: "config.json",

@@ -10,14 +10,12 @@ const S_Effect = require("../static/S_Effect");
 const S_Server = require("../static/S_Server");
 const S_PossibleEffect = require("../static/S_PossibleEffect");
 
-class StaticDataHelper {
-  effects = {};
+class StaticDataHelper {}
 
-  static async initStaticDatas() {
-    StaticDataHelper.S_Effect = await S_Effect.findAll();
-  }
+async function initStaticDatas() {
+  StaticDataHelper.Effects = await S_Effect.findAll();
 }
 
-StaticDataHelper.initStaticDatas();
+initStaticDatas();
 
 module.exports = StaticDataHelper;

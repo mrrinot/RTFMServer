@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 
     descriptions.forEach((desc, key) => {
       desc.effects.forEach(effect => {
-        if (_.find(StaticDataHelper.S_Effect, { effectId: effect.actionId })) {
+        if (_.find(StaticDataHelper.Effects, { id: effect.actionId })) {
           effects.push({
             effectId: effect.actionId,
             description: ItemDescriptionEffect.getDescription(effect),

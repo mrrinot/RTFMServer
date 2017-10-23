@@ -65,12 +65,12 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/login", login);
-app.use("/items", items);
-app.use("/invite", invite);
-app.use("/createAPIKey", APIKey);
-app.use("/itemData", itemData);
-app.use("/itemStat", itemStat);
+app.use("/api/login", login);
+app.use("/api/items", items);
+app.use("/api/invite", invite);
+app.use("/api/createAPIKey", APIKey);
+app.use("/api/itemData", itemData);
+app.use("/api/itemStat", itemStat);
 
 let iconsPath = nconf.get("iconsPath");
 
@@ -84,6 +84,12 @@ if (iconsPath) {
   }
 }
 
-app.listen(8080, () => {
-  winston.info("server running !");
+if (nconf.get("prod") === true) {
+  winston.info(`Using ${path.join(__dirname, "build")} to serve client.`);
+  app.use("*", serveStatic(path.join(__dirname, "build")));
+}
+
+const port = nconf.get("PORT");
+app.listen(port, () => {
+  winston.info(`Server running on port ${port} !`);
 });
