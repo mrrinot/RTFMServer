@@ -1,10 +1,8 @@
 "use strict";
 
 const Sequelize = require("sequelize");
-const _ = require("lodash");
 const sequelize = require("../sequelize");
-const ObjectEffects = require("../conversion/ObjectEffects");
-const DataManager = require("../conversion/DataManager");
+const ItemDescriptionEffect = require("./ItemDescriptionEffect");
 
 const ItemDescription = sequelize.define(
   "itemDescription",
@@ -28,35 +26,14 @@ const ItemDescription = sequelize.define(
         this.setDataValue("prices", `[${value.join(",")}]`);
       },
     },
-    effects: {
-      type: Sequelize.TEXT,
-      allowNull: false,
-      get() {
-        return JSON.parse(this.getDataValue("effects"));
-      },
-      set(value) {
-        const effects = value.map(effect => {
-          const instance = ObjectEffects(effect);
-          const effectId = effect.actionId;
-
-          const effectModel = _.find(DataManager.Effects, ["id", effectId]);
-          if (effectModel === undefined) {
-            console.log(effect);
-            return { ...effect, description: "" };
-          }
-          const description = instance.prepareDescription(
-            effectModel.descriptionId_string,
-            effectId,
-          );
-          return { ...effect, description };
-        });
-        this.setDataValue("effects", JSON.stringify(effects));
-      },
-    },
   },
   {
     timestamps: false,
   },
 );
+
+ItemDescription.hasMany(ItemDescriptionEffect, {
+  as: "effects",
+});
 
 module.exports = ItemDescription;

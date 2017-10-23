@@ -39,7 +39,8 @@
         "lint": "eslint \"**/*.js\"",
         "lint:fix": "eslint --fix \"**/*.js\"",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon index.js"
+        "start": "nodemon index.js",
+        "setup": "node setup.js"
     },
     "repository": {
         "type": "git",
@@ -55,7 +56,5 @@
         "printWidth": 100,
         "trailingComma": "all"
     },
-    "eslintIgnore": [
-        "node_modules/*"
-    ]
+    "eslintIgnore": ["node_modules/*"]
 }

@@ -22,7 +22,11 @@ router.get("/:input", async (req, res) => {
       name: where(fn("lower", col("name")), "LIKE", `%${inputValue}%`),
     },
     include: [
-      { model: S_PossibleEffect, as: "possibleEffects" },
+      {
+        model: S_PossibleEffect,
+        as: "possibleEffects",
+        include: [{ model: S_Effect, as: "effect" }],
+      },
       { model: S_ItemType, as: "type" },
     ],
     order: [["name", "ASC"]],

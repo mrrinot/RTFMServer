@@ -13,6 +13,12 @@ const S_Effect = sequelize.define(
     boost: {
       type: Sequelize.BOOLEAN,
     },
+    bonusType: {
+      type: Sequelize.INTEGER,
+    },
+    useInFight: {
+      type: Sequelize.BOOLEAN,
+    },
   },
   {
     timestamps: false,
@@ -24,6 +30,8 @@ S_Effect.convert = function convertS_Effect(effect) {
     id: effect.id,
     description: effect.descriptionId_string || "",
     boost: effect.boost,
+    bonusType: effect.bonusType,
+    useInFight: effect.useInFight,
   };
 };
 

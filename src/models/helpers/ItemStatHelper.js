@@ -11,6 +11,7 @@ const S_Server = require("../static/S_Server");
 const S_PossibleEffect = require("../static/S_PossibleEffect");
 const ItemData = require("../ItemData");
 const ItemDescription = require("../ItemDescription");
+const ItemDescriptionEffect = require("../ItemDescriptionEffect");
 const Promisify = require("bluebird");
 const async = Promisify.promisifyAll(require("async"));
 
@@ -30,7 +31,11 @@ class ItemStatHelper {
       where: { itemId },
       include: [
         { model: S_Server, as: "server" },
-        { model: ItemDescription, as: "itemDescriptions" },
+        {
+          model: ItemDescription,
+          as: "itemDescriptions",
+          include: [{ model: ItemDescriptionEffect, as: "effects" }],
+        },
       ],
       order: [["timestamp", "ASC"]],
     });

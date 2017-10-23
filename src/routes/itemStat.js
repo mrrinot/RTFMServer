@@ -4,6 +4,7 @@ const express = require("express");
 const S_Item = require("../models/static/S_Item");
 const S_PossibleEffect = require("../models/static/S_PossibleEffect");
 const S_ItemType = require("../models/static/S_ItemType");
+const S_Effect = require("../models/static/S_Effect");
 const ItemStatHelper = require("../models/helpers/ItemStatHelper");
 
 const router = express.Router();
@@ -14,7 +15,11 @@ router.get("/:itemId", async (req, res) => {
       id: req.params.itemId,
     },
     include: [
-      { model: S_PossibleEffect, as: "possibleEffects" },
+      {
+        model: S_PossibleEffect,
+        as: "possibleEffects",
+        include: [{ model: S_Effect, as: "effect" }],
+      },
       { model: S_ItemType, as: "type" },
     ],
   });

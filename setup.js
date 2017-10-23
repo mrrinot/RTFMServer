@@ -19,6 +19,7 @@ const S_PossibleEffect = require("./src/models/static/S_PossibleEffect");
 const S_Server = require("./src/models/static/S_Server");
 const ItemData = require("./src/models/ItemData");
 const ItemDescription = require("./src/models/ItemDescription");
+const ItemDescriptionEffect = require("./src/models/ItemDescriptionEffect");
 const sequelize = require("./src/sequelize");
 const DataManager = require("./src/conversion/DataManager");
 const CriterionConverter = require("./src/conversion/CriterionConverter");
@@ -190,34 +191,135 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     process.exit(1);
   }
 
+  //#region dummy data
+
   const crawled = {
-    itemId: 10235,
-    averagePrice: 153592,
+    itemId: 7122,
     serverId: 217,
-    timestamp: 1507228789411,
+    averagePrice: 3500,
+    timestamp: 1508584998188,
     itemDescriptions: [
       {
-        objectUID: 751478,
+        objectUID: 6285371,
         effects: [
           {
-            typeId: 73,
-            actionId: 628,
-            diceNum: 5,
-            diceSide: 0,
-            diceConst: 113,
+            actionId: 125,
+            value: 24,
+            typeId: 70,
+          },
+          {
+            actionId: 160,
+            value: 3,
+            typeId: 70,
+          },
+          {
+            actionId: 161,
+            value: 2,
+            typeId: 70,
           },
         ],
-        prices: [18, 0, 0],
+        prices: [4000, 0, 0],
+      },
+      {
+        objectUID: 6715253,
+        effects: [
+          {
+            actionId: 125,
+            value: 23,
+            typeId: 70,
+          },
+          {
+            actionId: 160,
+            value: 2,
+            typeId: 70,
+          },
+          {
+            actionId: 161,
+            value: 3,
+            typeId: 70,
+          },
+        ],
+        prices: [3970, 0, 0],
+      },
+      {
+        objectUID: 4996370,
+        effects: [
+          {
+            actionId: 125,
+            value: 21,
+            typeId: 70,
+          },
+          {
+            actionId: 160,
+            value: 2,
+            typeId: 70,
+          },
+          {
+            actionId: 161,
+            value: 2,
+            typeId: 70,
+          },
+        ],
+        prices: [5000, 0, 0],
+      },
+      {
+        objectUID: 6715461,
+        effects: [
+          {
+            actionId: 125,
+            value: 25,
+            typeId: 70,
+          },
+          {
+            actionId: 160,
+            value: 3,
+            typeId: 70,
+          },
+          {
+            actionId: 161,
+            value: 3,
+            typeId: 70,
+          },
+        ],
+        prices: [3970, 0, 0],
       },
     ],
   };
 
-  await ItemData.create(crawled, {
-    include: [{ model: ItemDescription, as: "itemDescriptions" }],
+  //#endregion
+
+  const dataCrawled = await ItemData.create(crawled, { validate: true, returning: true });
+  const descriptions = [];
+  const descEffects = [];
+  crawled.itemDescriptions.forEach(desc => {
+    descriptions.push({ ...desc, itemDatumId: dataCrawled.id });
   });
 
+  const dataDescriptions = await ItemDescription.bulkCreate(descriptions, {
+    validate: true,
+    returning: true,
+  });
+
+  crawled.itemDescriptions.forEach((desc, descKey) =>
+    desc.effects.forEach((effect, key) => {
+      descEffects.push({
+        effectId: effect.actionId,
+        description: ItemDescriptionEffect.getDescription(effect),
+        itemDescriptionId: dataDescriptions[descKey].id,
+      });
+    }),
+  );
+
+  await ItemDescriptionEffect.bulkCreate(descEffects, { validate: true });
+
   const result = await ItemData.findAll({
-    include: [{ model: ItemDescription, as: "itemDescriptions" }],
+    include: [
+      {
+        model: ItemDescription,
+        as: "itemDescriptions",
+        include: [{ model: ItemDescriptionEffect, as: "effects" }],
+      },
+    ],
   });
 
   console.log(JSON.stringify(result[0].get({ plain: true }), null, 4));
