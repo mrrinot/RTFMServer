@@ -42,7 +42,7 @@
     "lint:fix": "eslint --fix \"**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:prod": "cross-env NODE_ENV=production node index.js --iconsPath ./icons",
-    "start:forever": "cross-env NODE_ENV=production forever start index.js --iconsPath ./icons",
+    "start:forever": "cross-env NODE_ENV=production forever index.js --iconsPath ./icons",
     "start": "nodemon index.js"
   },
   "repository": {

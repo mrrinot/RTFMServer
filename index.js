@@ -86,9 +86,10 @@ if (iconsPath) {
 
 if (nconf.get("prod") === true) {
   winston.info(`Using ${path.join(__dirname, "build")} to serve client.`);
-  app.use(serveStatic(path.join(__dirname, "build")));
+  app.use("*", serveStatic(path.join(__dirname, "build")));
 }
 
-app.listen(8080, () => {
-  winston.info("server running !");
+const port = nconf.get("PORT");
+app.listen(port, () => {
+  winston.info(`Server running on port ${port} !`);
 });
