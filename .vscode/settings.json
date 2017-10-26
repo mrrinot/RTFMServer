@@ -1,17 +1,17 @@
 {
-  "newFile.defaultFileExtension": ".js",
-  "newFile.showPathRelativeTo": "none",
-  "newFile.relativeTo": "file",
+    "newFile.defaultFileExtension": ".js",
+    "newFile.showPathRelativeTo": "none",
+    "newFile.relativeTo": "file",
 
-  "prettier.printWidth": 100,
-  "prettier.trailingComma": "all",
-  "prettier.eslintIntegration": true,
+    "prettier.printWidth": 100,
+    "prettier.trailingComma": "all",
+    "prettier.eslintIntegration": true,
 
-  "files.eol": "\n",
+    "files.eol": "\n",
 
-  "editor.formatOnSave": true,
+    "editor.formatOnSave": true,
 
-  "files.exclude": {
-    "node_modules/": true
-  }
+    "files.exclude": {
+        "node_modules/": false
+    }
 }
