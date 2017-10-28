@@ -85,8 +85,12 @@ if (iconsPath) {
 }
 
 if (nconf.get("prod") === true) {
-  winston.info(`Using ${path.join(__dirname, "build")} to serve client.`);
-  app.use("*", serveStatic(path.join(__dirname, "build")));
+  const buildDir = path.join(__dirname, "build");
+  const indexFile = fs.readFileSync(path.join(buildDir, "index.html"));
+  winston.info(`Using ${buildDir} to serve client.`);
+  app.use(serveStatic(buildDir), (req, res) => {
+    res.end(indexFile);
+  });
 }
 
 const port = nconf.get("PORT");
