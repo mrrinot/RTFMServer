@@ -22,6 +22,8 @@ const S_Effect = sequelize.define(
   },
   {
     timestamps: false,
+    charset: "utf8mb4",
+    collate: "utf8mb4_general_ci",
   },
 );
 

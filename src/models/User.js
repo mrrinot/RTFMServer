@@ -7,11 +7,6 @@ const jwt = require("jsonwebtoken");
 const nconf = require("nconf");
 
 const User = sequelize.define("user", {
-  id: {
-    primaryKey: true,
-    type: Sequelize.UUID,
-    defaultValue: Sequelize.UUIDV4,
-  },
   pseudo: {
     type: Sequelize.STRING(150),
     index: true,
@@ -51,7 +46,7 @@ const User = sequelize.define("user", {
     },
   },
   APIKey: {
-    type: Sequelize.UUIDV4,
+    type: Sequelize.STRING,
     allowNull: true,
   },
 });

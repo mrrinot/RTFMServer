@@ -21,6 +21,7 @@
     "jsonwebtoken": "^8.1.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
+    "mysql2": "^1.4.2",
     "nconf": "^0.8.5",
     "node-mailjet": "^3.2.1",
     "node-pre-gyp": "^0.6.38",
@@ -29,7 +30,6 @@
     "prettier": "^1.7.4",
     "sequelize": "^4.13.2",
     "serve-static": "^1.13.1",
-    "sqlite3": "^3.1.13",
     "uuid": "^3.1.0",
     "winston": "^2.4.0"
   },
@@ -60,5 +60,7 @@
     "printWidth": 100,
     "trailingComma": "all"
   },
-  "eslintIgnore": ["node_modules/*"]
+  "eslintIgnore": [
+    "node_modules/*"
+  ]
 }

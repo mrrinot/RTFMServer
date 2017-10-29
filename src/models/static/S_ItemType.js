@@ -17,6 +17,8 @@ const S_ItemType = sequelize.define(
   },
   {
     timestamps: false,
+    charset: "utf8mb4",
+    collate: "utf8mb4_general_ci",
   },
 );
 

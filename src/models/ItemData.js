@@ -19,7 +19,7 @@ const ItemData = sequelize.define(
       allowNull: true,
     },
     timestamp: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.BIGINT,
       allowNull: false,
     },
   },
