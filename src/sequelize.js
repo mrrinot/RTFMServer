@@ -11,6 +11,7 @@ module.exports = new Sequelize(
   nconf.get("DB_PASSWORD"),
   {
     host: nconf.get("DB_HOST"),
+    port: nconf.get("DB_PORT"),
     dialect: nconf.get("DB_DIALECT"),
     operatorsAliases: false,
 
