@@ -60,7 +60,7 @@ router.post("/", async (req, res) => {
     invitedAccount.save();
     const sendMail = mailjet.post("send");
     const emailData = {
-      FromEmail: "Rinot95@gmail.com",
+      FromEmail: nconf.get("MAILJET_EMAIL"),
       FromName: senderAccount.pseudo,
       Subject: "You have been invited to RTFM",
       "Text-Part": `Hello, you have been invited to RTFM, follow this link to create your account : ${invitedAccount.generateInvitationUrl()}`,

@@ -6,8 +6,10 @@ const nconf = require("nconf");
 const path = require("path");
 const fs = require("fs");
 const bodyParser = require("body-parser");
+const redis = require("redis");
 const app = require("express")();
 const session = require("express-session");
+const RedisStore = require("connect-redis")(session);
 const serveStatic = require("serve-static");
 const User = require("./src/models/User");
 const login = require("./src/routes/login");
@@ -18,6 +20,8 @@ const APIKey = require("./src/routes/APIKey");
 const itemData = require("./src/routes/itemData");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+
+const client = redis.createClient();
 
 passport.use(
   new LocalStrategy(
@@ -56,6 +60,12 @@ passport.deserializeUser(async (user, done) => {
 app.use(bodyParser.json());
 app.use(
   session({
+    store: new RedisStore({
+      host: nconf.get("RTFMREDIS_HOST"),
+      port: nconf.get("RTFMREDIS_PORT"),
+      client,
+      ttl: 3600,
+    }),
     secret: nconf.get("SESSION_SECRET"),
     proxy: true,
     cookie: { maxAge: 1000 * 60 * 60 },

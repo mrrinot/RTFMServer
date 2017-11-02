@@ -18,7 +18,7 @@ module.exports = new Sequelize(
     pool: {
       max: 5,
       min: 0,
-      idle: 10000,
+      idle: 60000,
     },
 
     logging(...args) {

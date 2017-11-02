@@ -296,41 +296,41 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
 
   //#endregion
 
-  const dataCrawled = await ItemData.create(crawled, { validate: true, returning: true });
-  const descriptions = [];
-  const descEffects = [];
-  crawled.itemDescriptions.forEach(desc => {
-    descriptions.push({ ...desc, itemDatumId: dataCrawled.id });
-  });
+  // const dataCrawled = await ItemData.create(crawled, { validate: true, returning: true });
+  // const descriptions = [];
+  // const descEffects = [];
+  // crawled.itemDescriptions.forEach(desc => {
+  //   descriptions.push({ ...desc, itemDatumId: dataCrawled.id });
+  // });
 
-  const dataDescriptions = await ItemDescription.bulkCreate(descriptions, {
-    validate: true,
-    returning: true,
-  });
+  // const dataDescriptions = await ItemDescription.bulkCreate(descriptions, {
+  //   validate: true,
+  //   returning: true,
+  // });
 
-  crawled.itemDescriptions.forEach((desc, descKey) =>
-    desc.effects.forEach((effect, key) => {
-      descEffects.push({
-        effectId: effect.actionId,
-        description: ItemDescriptionEffect.getDescription(effect),
-        itemDescriptionId: dataDescriptions[descKey].id,
-      });
-    }),
-  );
+  // crawled.itemDescriptions.forEach((desc, descKey) =>
+  //   desc.effects.forEach((effect, key) => {
+  //     descEffects.push({
+  //       effectId: effect.actionId,
+  //       description: ItemDescriptionEffect.getDescription(effect),
+  //       itemDescriptionId: dataDescriptions[descKey].id,
+  //     });
+  //   }),
+  // );
 
-  await ItemDescriptionEffect.bulkCreate(descEffects, { validate: true });
+  // await ItemDescriptionEffect.bulkCreate(descEffects, { validate: true });
 
-  const result = await ItemData.findAll({
-    include: [
-      {
-        model: ItemDescription,
-        as: "itemDescriptions",
-        include: [{ model: ItemDescriptionEffect, as: "effects" }],
-      },
-    ],
-  });
+  // const result = await ItemData.findAll({
+  //   include: [
+  //     {
+  //       model: ItemDescription,
+  //       as: "itemDescriptions",
+  //       include: [{ model: ItemDescriptionEffect, as: "effects" }],
+  //     },
+  //   ],
+  // });
 
-  console.log(JSON.stringify(result[0].get({ plain: true }), null, 4));
+  // console.log(JSON.stringify(result[0].get({ plain: true }), null, 4));
 
   try {
     winston.info("Creating dummy user");
@@ -338,6 +338,7 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
       email: "test@test.com",
       pseudo: "SuperCoolGuy",
       adminLevel: 3,
+      APIKey: "5ecae6b1-4e72-4f21-8304-c392e4b8e9da",
       password: bcrypt.hashSync("pass", nconf.get("bcrypt_rounds")),
     };
     await User.create(user);

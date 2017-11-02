@@ -45,6 +45,13 @@ const User = sequelize.define("user", {
       this.setDataValue("invitationToken", this.generateInvitationToken());
     },
   },
+  resetPasswordToken: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    set() {
+      this.setDataValue("resetPasswordToken", this.generateResetPasswordToken());
+    },
+  },
   APIKey: {
     type: Sequelize.STRING,
     allowNull: true,
@@ -61,6 +68,10 @@ User.prototype.setPassword = async function setPassword(pass) {
   this.save();
 };
 
+User.prototype.generateResetPasswordToken = function generateResetPasswordToken() {
+  return jwt.sign({ email: this.email }, nconf.get("JWT_SECRETKEY"), { expiresIn: "1h" });
+};
+
 User.prototype.generateInvitationToken = function generateInvitationToken() {
   return jwt.sign({ email: this.email }, nconf.get("JWT_SECRETKEY"), {
     expiresIn: "1h",
@@ -69,6 +80,11 @@ User.prototype.generateInvitationToken = function generateInvitationToken() {
 
 User.prototype.setInvitationToken = function setInvitationToken() {
   this.setDataValue("invitationToken", this.generateInvitationToken());
+  this.save();
+};
+
+User.prototype.setResetPasswordToken = function setResetPasswordToken() {
+  this.setDataValue("resetPasswordToken", this.generateResetPasswordToken());
   this.save();
 };
 
@@ -95,6 +111,7 @@ User.prototype.toSessionUser = function toSessionUser() {
     adminLevel: this.adminLevel,
     pseudo: this.pseudo,
     invitationToken: this.invitationToken,
+    resetPasswordToken: this.resetPasswordToken,
     password: this.password,
     id: this.id,
     APIKey: this.APIKey,
@@ -102,7 +119,11 @@ User.prototype.toSessionUser = function toSessionUser() {
 };
 
 User.prototype.generateInvitationUrl = function generateInvitationUrl() {
-  return `http://localhost:3000/invite/${this.invitationToken}`;
+  return `${nconf.get("RTFM_HOST")}/invite/${this.invitationToken}`;
+};
+
+User.prototype.generateResetPasswordUrl = function generateResetPasswordUrl() {
+  return `${nconf.get("RTFM_HOST")}/login/resetPassword/${this.resetPasswordToken}`;
 };
 
 module.exports = User;
