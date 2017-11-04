@@ -2,8 +2,10 @@
 
 const Sequelize = require("sequelize");
 const nconf = require("nconf");
-const path = require("path");
 const winston = require("winston");
+
+winston.verbose(`DB_HOST: ${nconf.get("DB_HOST")}`);
+winston.verbose(`DB_PORT: ${nconf.get("DB_PORT")}`);
 
 module.exports = new Sequelize(
   nconf.get("DB_NAME"),
@@ -21,10 +23,6 @@ module.exports = new Sequelize(
       idle: 60000,
     },
 
-    logging(...args) {
-      winston.verbose(...args);
-    },
-
-    storage: path.join(nconf.get("base_dir"), "db.sqlite"),
+    logging() {},
   },
 );
