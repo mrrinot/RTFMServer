@@ -21,8 +21,6 @@ const itemData = require("./src/routes/itemData");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
-const client = redis.createClient();
-
 passport.use(
   new LocalStrategy(
     { usernameField: "email", passwordField: "password" },
@@ -56,13 +54,17 @@ passport.deserializeUser(async (user, done) => {
     done(new Error("Account not found"), {});
   }
 });
+const client = redis.createClient({
+  host: nconf.get("RTFMREDIS_HOST"),
+  port: nconf.get("RTFMREDIS_PORT"),
+});
+client.auth(nconf.get("RTFMREDIS_PASSWORD"));
 
 app.use(bodyParser.json());
 app.use(
   session({
     store: new RedisStore({
-      host: nconf.get("RTFMREDIS_HOST"),
-      port: nconf.get("RTFMREDIS_PORT"),
+      logErrors: true,
       client,
       ttl: 3600,
     }),
