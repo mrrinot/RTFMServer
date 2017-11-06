@@ -14,7 +14,6 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   const whereClause = parseWhere(req.body.where);
-  console.log(whereClause);
   const items = await S_Item.findAll({
     where: whereClause,
     include: [
