@@ -14,7 +14,7 @@ function numberOperator(clause) {
 }
 
 function multipleLikeString(clause) {
-  const terms = clause.value.split(" ");
+  const terms = clause.value.replace(/\s+/g, " ").split(" ");
   const whereRet = and(
     ...terms.map(term => where(fn("lower", col(clause.col)), clause.operator, `%${term}%`)),
   );
