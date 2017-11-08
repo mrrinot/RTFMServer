@@ -21,7 +21,7 @@ function multipleLikeString(clause) {
         return where(
           fn("lower", col(clause.col)),
           "REGEXP",
-          `([[:blank:][:punct:]]|^)${term}([[:blank:][:punct:]]|$)`,
+          `([[:blank:][:punct:]]|^)${term.slice(1, term.length - 1)}([[:blank:][:punct:]]|$)`,
         );
       }
       return where(fn("lower", col(clause.col)), clause.operator, `%${term}%`);
