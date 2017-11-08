@@ -47,6 +47,7 @@ router.post("/", async (req, res) => {
     const invitedAccount = (await User.findOrCreate({
       where: {
         email,
+        pseudo: "PLACEHOLDER_PSEUDO",
       },
       defaults: {
         pseudo: "PLACEHOLDER_PSEUDO",
