@@ -3,7 +3,7 @@
 const Sequelize = require("sequelize");
 const _ = require("lodash");
 
-const { fn, col, where, Op, and } = Sequelize;
+const { fn, col, where, and } = Sequelize;
 
 function likeString(clause) {
   return where(fn("lower", col(clause.col)), clause.operator, `%${clause.value}%`);
@@ -16,7 +16,16 @@ function numberOperator(clause) {
 function multipleLikeString(clause) {
   const terms = clause.value.replace(/\s+/g, " ").split(" ");
   const whereRet = and(
-    ...terms.map(term => where(fn("lower", col(clause.col)), clause.operator, `%${term}%`)),
+    ...terms.map(term => {
+      if (term[0] === '"' && term[term.length - 1] === '"') {
+        return where(
+          fn("lower", col(clause.col)),
+          "REGEXP",
+          `([[:blank:][:punct:]]|^)${term.slice(1, term.length - 1)}([[:blank:][:punct:]]|$)`,
+        );
+      }
+      return where(fn("lower", col(clause.col)), clause.operator, `%${term}%`);
+    }),
   );
   return whereRet;
 }
