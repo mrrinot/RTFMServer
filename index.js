@@ -20,6 +20,7 @@ const APIKey = require("./src/routes/APIKey");
 const itemData = require("./src/routes/itemData");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const { requiredAdminLevel, requireGuest } = require("./src/middlewares");
 
 passport.use(
   new LocalStrategy(
@@ -75,14 +76,16 @@ app.use(
     resave: false,
   }),
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/api/login", login);
-app.use("/api/items", items);
-app.use("/api/invite", invite);
-app.use("/api/createAPIKey", APIKey);
-app.use("/api/itemData", itemData);
-app.use("/api/itemStat", itemStat);
+
+app.use("/api/login", requireGuest, login);
+app.use("/api/items", requiredAdminLevel(1), items);
+app.use("/api/invite", requiredAdminLevel(3), invite);
+app.use("/api/createAPIKey", requiredAdminLevel(2), APIKey);
+app.use("/api/itemData", requiredAdminLevel(1), itemData);
+app.use("/api/itemStat", requiredAdminLevel(1), itemStat);
 
 let iconsPath = nconf.get("iconsPath");
 
