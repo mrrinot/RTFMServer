@@ -67,7 +67,7 @@ router.post("/resetPasswordRequest", async (req, res) => {
 });
 
 router.post("/resetPassword", async (req, res) => {
-  const { email, password, passwordConfirmation, resetPasswordToken } = req.body;
+  const { email, password, resetPasswordToken } = req.body;
   jwt.verify(resetPasswordToken, nconf.get("JWT_SECRETKEY"), async err => {
     if (err) {
       res.status(401).json({ errors: { global: "Expired reset token" } });
