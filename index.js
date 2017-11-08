@@ -94,6 +94,8 @@ if (iconsPath) {
   } else {
     winston.warn(`${iconsPath} is not a valid directory. Skipping images`);
   }
+} else {
+  winston.warn(`iconsPath is not set. Skipping images`);
 }
 
 if (nconf.get("prod") === true) {
