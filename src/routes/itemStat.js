@@ -6,7 +6,12 @@ const S_PossibleEffect = require("../models/static/S_PossibleEffect");
 const S_ItemType = require("../models/static/S_ItemType");
 const S_Effect = require("../models/static/S_Effect");
 const ItemStatHelper = require("../models/helpers/ItemStatHelper");
+const ItemDescription = require("../models/ItemDescription");
+const ItemDescriptionEffect = require("../models/ItemDescriptionEffect");
+const _ = require("lodash");
+const Sequelize = require("sequelize");
 
+const { Op } = Sequelize;
 const router = express.Router();
 
 router.get("/:itemId", async (req, res) => {
@@ -33,6 +38,20 @@ router.get("/:itemId", async (req, res) => {
   } else {
     res.status(404).json({ errors: { global: "Item not found" } });
   }
+});
+
+router.post("/effects/", async (req, res) => {
+  const effects = await ItemDescriptionEffect.findAll({
+    where: { itemDescriptionId: { [Op.in]: req.body.itemDescIds } },
+    include: [{ model: S_Effect, as: "effect" }],
+  });
+  const result = {};
+  _.each(effects, effect => {
+    const temp = effect.get({ plain: true });
+    if (!result[temp.itemDescriptionId]) result[temp.itemDescriptionId] = [];
+    result[temp.itemDescriptionId].push(temp);
+  });
+  res.json(result);
 });
 
 module.exports = router;

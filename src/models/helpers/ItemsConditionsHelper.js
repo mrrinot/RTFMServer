@@ -25,6 +25,8 @@ const conditionsFunc = {
   name: multipleLikeString,
   description: likeString,
   level: numberOperator,
+  typeId: numberOperator,
+  averagePrice: numberOperator,
 };
 
 function parseWhere(whereBody) {
@@ -37,4 +39,4 @@ function parseWhere(whereBody) {
   return whereClause;
 }
 
-module.exports = parseWhere;
+module.exports = { parseWhere };

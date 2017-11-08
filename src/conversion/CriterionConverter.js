@@ -37,7 +37,7 @@ function fileCriteria(critName, value, file, fieldName = "nameId_string") {
 }
 
 const converters = {
-  BI: (sign, value) => simpleCriteria("ui.criterion.unusableItem", sign, value),
+  BI: () => I18n.getUiText("ui.criterion.unusableItem"),
   CM: (sign, value) => simpleCriteria("ui.stats.movementPoints", sign, value),
   CP: (sign, value) => simpleCriteria("ui.stats.actionPoints", sign, value),
   CH: (sign, value) => simpleCriteria("ui.pvp.honourPoints", sign, value),

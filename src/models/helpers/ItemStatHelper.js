@@ -34,13 +34,6 @@ class ItemStatHelper {
         {
           model: ItemDescription,
           as: "itemDescriptions",
-          include: [
-            {
-              model: ItemDescriptionEffect,
-              as: "effects",
-              include: [{ model: S_Effect, as: "effect" }],
-            },
-          ],
         },
       ],
       order: [["timestamp", "ASC"]],
