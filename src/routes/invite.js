@@ -32,18 +32,9 @@ router.post("/:token", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { email, adminLevel, userInfos } = req.body;
-  const senderAccount = await User.find({
-    where: {
-      email: userInfos.email,
-    },
-  });
+  const { email, adminLevel } = req.body;
+  const senderAccount = req.session.passport.user;
   if (senderAccount !== null) {
-    if (senderAccount.adminLevel < 3) {
-      return res
-        .status(401)
-        .json({ errors: { global: "You do not have the required admin level for this query" } });
-    }
     const invitedAccount = (await User.findOrCreate({
       where: {
         email,
