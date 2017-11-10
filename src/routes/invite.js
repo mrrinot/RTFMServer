@@ -8,10 +8,11 @@ const mailjet = require("node-mailjet").connect(
   nconf.get("MAILJET_APISECRET"),
 );
 const jwt = require("jsonwebtoken");
+const { requiredAdminLevel, requireGuest } = require("../middlewares");
 
 const router = express.Router();
 
-router.post("/:token", (req, res) => {
+router.post("/:token", requireGuest, (req, res) => {
   const { email, password, pseudo, invitationToken } = req.body;
   jwt.verify(invitationToken, nconf.get("JWT_SECRETKEY"), async err => {
     if (err) {
@@ -31,7 +32,7 @@ router.post("/:token", (req, res) => {
   });
 });
 
-router.post("/", async (req, res) => {
+router.post("/", requiredAdminLevel(3), async (req, res) => {
   const { email, adminLevel } = req.body;
   const senderAccount = req.session.passport.user;
   if (senderAccount !== null) {

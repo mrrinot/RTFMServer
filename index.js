@@ -82,7 +82,7 @@ app.use(passport.session());
 
 app.use("/api/auth", auth);
 app.use("/api/items", requiredAdminLevel(1), items);
-app.use("/api/invite", requiredAdminLevel(3), invite);
+app.use("/api/invite", invite);
 app.use("/api/createAPIKey", requiredAdminLevel(2), APIKey);
 app.use("/api/itemData", itemData);
 app.use("/api/itemStat", requiredAdminLevel(1), itemStat);
