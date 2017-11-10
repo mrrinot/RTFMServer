@@ -7,7 +7,7 @@ const S_ItemType = require("../models/static/S_ItemType");
 const S_Effect = require("../models/static/S_Effect");
 const S_Server = require("../models/static/S_Server");
 const ItemStatHelper = require("../models/helpers/ItemStatHelper");
-const ItemData = require("../models/ItemData");
+const ItemDataHelper = require("../models/helpers/ItemDataHelper");
 const Promisify = require("bluebird");
 const async = Promisify.promisifyAll(require("async"));
 const { parseWhere } = require("../models/helpers/ItemsConditionsHelper");
@@ -18,9 +18,9 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const whereClause = parseWhere(req.body.where);
   console.log(whereClause);
-  if (whereClause.averagePrice === undefined) {
+  if (Object.keys(whereClause.Data).length === 0) {
     const items = await S_Item.findAll({
-      where: whereClause,
+      where: whereClause.Item,
       include: [
         {
           model: S_PossibleEffect,
@@ -40,14 +40,15 @@ router.post("/", async (req, res) => {
     });
     res.json(itemsPriced);
   } else {
-    const datas = await ItemData.findAll({
-      where: whereClause,
+    const ItemDataTable = await ItemDataHelper.getLastItemData();
+    const datas = await ItemDataTable.findAll({
+      where: whereClause.Data,
       include: [
         { model: S_Server, as: "server" },
         {
           model: S_Item,
           as: "item",
-          where: whereClause.name,
+          where: whereClause.Item,
           include: [
             {
               model: S_PossibleEffect,

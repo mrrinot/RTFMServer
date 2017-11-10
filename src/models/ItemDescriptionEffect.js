@@ -7,41 +7,44 @@ const ObjectEffects = require("../conversion/ObjectEffects");
 const DataManager = require("../conversion/DataManager");
 const _ = require("lodash");
 
-const ItemDescriptionEffect = sequelize.define(
-  "itemDescriptionEffect",
-  {
-    id: {
-      primaryKey: true,
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
+module.exports = function ItemDescriptionEffect(date) {
+  const effectInstance = sequelize.define(
+    `itemDescriptionEffect_${date}`,
+    {
+      id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+      },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        index: true,
+      },
     },
-    description: {
-      type: Sequelize.STRING,
-      allowNull: true,
+    {
+      timestamps: false,
+      tableName: `itemDescriptionEffect_${date}`,
     },
-  },
-  {
-    timestamps: false,
-  },
-);
+  );
 
-ItemDescriptionEffect.belongsTo(S_Effect, {
-  as: "effect",
-  foreignKey: "effectId",
-});
+  effectInstance.belongsTo(S_Effect, {
+    as: "effect",
+    foreignKey: "effectId",
+  });
 
-ItemDescriptionEffect.getDescription = function getDescription(effect) {
-  let desc = "";
-  const instance = ObjectEffects(effect);
-  const effectId = effect.actionId;
+  effectInstance.getDescription = function getDescription(effect) {
+    let desc = "";
+    const instance = ObjectEffects(effect);
+    const effectId = effect.actionId;
 
-  const effectModel = _.find(DataManager.Effects, ["id", effectId]);
-  if (effectModel === undefined) {
-    console.log(effect);
-  } else {
-    desc = instance.prepareDescription(effectModel.descriptionId_string, effectId);
-  }
-  return desc;
+    const effectModel = _.find(DataManager.Effects, ["id", effectId]);
+    if (effectModel === undefined) {
+      console.log(effect);
+    } else {
+      desc = instance.prepareDescription(effectModel.descriptionId_string, effectId);
+    }
+    return desc;
+  };
+  return effectInstance;
 };
-
-module.exports = ItemDescriptionEffect;

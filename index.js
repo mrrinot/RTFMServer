@@ -12,7 +12,7 @@ const session = require("express-session");
 const RedisStore = require("connect-redis")(session);
 const serveStatic = require("serve-static");
 const User = require("./src/models/User");
-const login = require("./src/routes/login");
+const auth = require("./src/routes/auth");
 const invite = require("./src/routes/invite");
 const items = require("./src/routes/items");
 const itemStat = require("./src/routes/itemStat");
@@ -20,7 +20,7 @@ const APIKey = require("./src/routes/APIKey");
 const itemData = require("./src/routes/itemData");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const { requiredAdminLevel, requireGuest } = require("./src/middlewares");
+const { requiredAdminLevel } = require("./src/middlewares");
 
 passport.use(
   new LocalStrategy(
@@ -50,7 +50,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (user, done) => {
   const account = await User.findById(user.id);
   if (account !== null) {
-    done(null, account);
+    done(null, account.toSessionUser());
   } else {
     done(new Error("Account not found"), {});
   }
@@ -80,11 +80,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/login", requireGuest, login);
+app.use("/api/auth", auth);
 app.use("/api/items", requiredAdminLevel(1), items);
 app.use("/api/invite", requiredAdminLevel(3), invite);
 app.use("/api/createAPIKey", requiredAdminLevel(2), APIKey);
-app.use("/api/itemData", requiredAdminLevel(1), itemData);
+app.use("/api/itemData", itemData);
 app.use("/api/itemStat", requiredAdminLevel(1), itemStat);
 
 let iconsPath = nconf.get("iconsPath");

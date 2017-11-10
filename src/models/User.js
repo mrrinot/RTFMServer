@@ -112,9 +112,19 @@ User.prototype.toSessionUser = function toSessionUser() {
     pseudo: this.pseudo,
     invitationToken: this.invitationToken,
     resetPasswordToken: this.resetPasswordToken,
-    password: this.password,
     id: this.id,
     APIKey: this.APIKey,
+  };
+};
+
+User.toAuthJSON = function toAuthJSON(user) {
+  return {
+    email: user.email,
+    adminLevel: user.adminLevel,
+    pseudo: user.pseudo,
+    invitationToken: user.invitationToken,
+    resetPasswordToken: user.resetPasswordToken,
+    APIKey: user.APIKey,
   };
 };
 

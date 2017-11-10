@@ -20,9 +20,9 @@ module.exports = new Sequelize(
     pool: {
       max: 5,
       min: 0,
-      idle: 60000,
+      idle: 30 * 60 * 1000,
     },
 
-    logging() {},
+    logging: winston.verbose,
   },
 );

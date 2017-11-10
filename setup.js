@@ -18,15 +18,21 @@ const S_Recipe = require("./src/models/static/S_Recipe");
 const S_Effect = require("./src/models/static/S_Effect");
 const S_PossibleEffect = require("./src/models/static/S_PossibleEffect");
 const S_Server = require("./src/models/static/S_Server");
-const ItemData = require("./src/models/ItemData");
-const ItemDescription = require("./src/models/ItemDescription");
-const ItemDescriptionEffect = require("./src/models/ItemDescriptionEffect");
 const DataManager = require("./src/conversion/DataManager");
 const CriterionConverter = require("./src/conversion/CriterionConverter");
 
 (async function() {
   await sequelize.sync({ force: !nconf.get("noSync") });
-
+  // if (nconf.get("noSync")) {
+  //   await S_Job.drop();
+  //   await S_Item.drop();
+  //   await S_ItemType.drop();
+  //   await S_Ingredient.drop();
+  //   await S_Recipe.drop();
+  //   await S_Effect.drop();
+  //   await S_PossibleEffect.drop();
+  //   await S_Server.drop();
+  // }
   const data = file => DataManager[file];
 
   let jobs = data("Jobs");
@@ -198,139 +204,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     winston.error("Unable to create servers.");
     process.exit(1);
   }
-
-  //#region dummy data
-
-  const crawled = {
-    itemId: 7122,
-    serverId: 217,
-    averagePrice: 3500,
-    timestamp: 1508584998188,
-    itemDescriptions: [
-      {
-        objectUID: 6285371,
-        effects: [
-          {
-            actionId: 125,
-            value: 24,
-            typeId: 70,
-          },
-          {
-            actionId: 160,
-            value: 3,
-            typeId: 70,
-          },
-          {
-            actionId: 161,
-            value: 2,
-            typeId: 70,
-          },
-        ],
-        prices: [4000, 0, 0],
-      },
-      {
-        objectUID: 6715253,
-        effects: [
-          {
-            actionId: 125,
-            value: 23,
-            typeId: 70,
-          },
-          {
-            actionId: 160,
-            value: 2,
-            typeId: 70,
-          },
-          {
-            actionId: 161,
-            value: 3,
-            typeId: 70,
-          },
-        ],
-        prices: [3970, 0, 0],
-      },
-      {
-        objectUID: 4996370,
-        effects: [
-          {
-            actionId: 125,
-            value: 21,
-            typeId: 70,
-          },
-          {
-            actionId: 160,
-            value: 2,
-            typeId: 70,
-          },
-          {
-            actionId: 161,
-            value: 2,
-            typeId: 70,
-          },
-        ],
-        prices: [5000, 0, 0],
-      },
-      {
-        objectUID: 6715461,
-        effects: [
-          {
-            actionId: 125,
-            value: 25,
-            typeId: 70,
-          },
-          {
-            actionId: 160,
-            value: 3,
-            typeId: 70,
-          },
-          {
-            actionId: 161,
-            value: 3,
-            typeId: 70,
-          },
-        ],
-        prices: [3970, 0, 0],
-      },
-    ],
-  };
-
-  //#endregion
-
-  // const dataCrawled = await ItemData.create(crawled, { validate: true, returning: true });
-  // const descriptions = [];
-  // const descEffects = [];
-  // crawled.itemDescriptions.forEach(desc => {
-  //   descriptions.push({ ...desc, itemDatumId: dataCrawled.id });
-  // });
-
-  // const dataDescriptions = await ItemDescription.bulkCreate(descriptions, {
-  //   validate: true,
-  //   returning: true,
-  // });
-
-  // crawled.itemDescriptions.forEach((desc, descKey) =>
-  //   desc.effects.forEach((effect, key) => {
-  //     descEffects.push({
-  //       effectId: effect.actionId,
-  //       description: ItemDescriptionEffect.getDescription(effect),
-  //       itemDescriptionId: dataDescriptions[descKey].id,
-  //     });
-  //   }),
-  // );
-
-  // await ItemDescriptionEffect.bulkCreate(descEffects, { validate: true });
-
-  // const result = await ItemData.findAll({
-  //   include: [
-  //     {
-  //       model: ItemDescription,
-  //       as: "itemDescriptions",
-  //       include: [{ model: ItemDescriptionEffect, as: "effects" }],
-  //     },
-  //   ],
-  // });
-
-  // console.log(JSON.stringify(result[0].get({ plain: true }), null, 4));
 
   try {
     winston.info("Creating dummy user");

@@ -2,38 +2,39 @@
 
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
-const ItemDescriptionEffect = require("./ItemDescriptionEffect");
 
-const ItemDescription = sequelize.define(
-  "itemDescription",
-  {
-    id: {
-      primaryKey: true,
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
-    },
-    objectUID: {
-      type: Sequelize.INTEGER,
-      index: true,
-    },
-    prices: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      get() {
-        return JSON.parse(this.getDataValue("prices"));
+module.exports = function ItemDescription(date, effectInstance) {
+  const descInstance = sequelize.define(
+    `itemDescription_${date}`,
+    {
+      id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
       },
-      set(value) {
-        this.setDataValue("prices", `[${value.join(",")}]`);
+      objectUID: {
+        type: Sequelize.INTEGER,
+      },
+      prices: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        get() {
+          return JSON.parse(this.getDataValue("prices"));
+        },
+        set(value) {
+          this.setDataValue("prices", `[${value.join(",")}]`);
+        },
       },
     },
-  },
-  {
-    timestamps: false,
-  },
-);
+    {
+      timestamps: false,
+      tableName: `itemDescription_${date}`,
+    },
+  );
 
-ItemDescription.hasMany(ItemDescriptionEffect, {
-  as: "effects",
-});
-
-module.exports = ItemDescription;
+  descInstance.hasMany(effectInstance, {
+    as: "effects",
+    foreignKey: "itemDescriptionId",
+  });
+  return descInstance;
+};

@@ -6,8 +6,7 @@ const S_PossibleEffect = require("../models/static/S_PossibleEffect");
 const S_ItemType = require("../models/static/S_ItemType");
 const S_Effect = require("../models/static/S_Effect");
 const ItemStatHelper = require("../models/helpers/ItemStatHelper");
-const ItemDescription = require("../models/ItemDescription");
-const ItemDescriptionEffect = require("../models/ItemDescriptionEffect");
+const ItemDataHelper = require("../models/helpers/ItemDataHelper");
 const _ = require("lodash");
 const Sequelize = require("sequelize");
 
@@ -41,7 +40,8 @@ router.get("/:itemId", async (req, res) => {
 });
 
 router.post("/effects/", async (req, res) => {
-  const effects = await ItemDescriptionEffect.findAll({
+  const ItemDescriptionEffectTable = await ItemDataHelper.getLastItemDescriptionEffect();
+  const effects = await ItemDescriptionEffectTable.findAll({
     where: { itemDescriptionId: { [Op.in]: req.body.itemDescIds } },
     include: [{ model: S_Effect, as: "effect" }],
   });

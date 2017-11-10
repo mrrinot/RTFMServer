@@ -9,10 +9,11 @@ const mailjet = require("node-mailjet").connect(
   nconf.get("MAILJET_APISECRET"),
 );
 const jwt = require("jsonwebtoken");
+const { requireGuest, requiredAdminLevel } = require("../middlewares");
 
 const router = express.Router();
 
-router.post("/", (req, res, next) => {
+router.post("/login", requireGuest, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       return next(err);
@@ -24,18 +25,12 @@ router.post("/", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      const userInfos = {
-        email: req.user.email,
-        adminLevel: req.user.adminLevel,
-        pseudo: req.user.pseudo,
-        APIKey: req.user.APIKey,
-      };
-      return res.json(userInfos);
+      return res.json(User.toAuthJSON(user));
     });
   })(req, res, next);
 });
 
-router.post("/resetPasswordRequest", async (req, res) => {
+router.post("/resetPasswordRequest", requireGuest, async (req, res) => {
   const { email } = req.body;
   const acc = await User.find({
     where: {
@@ -66,7 +61,7 @@ router.post("/resetPasswordRequest", async (req, res) => {
   return null;
 });
 
-router.post("/resetPassword", async (req, res) => {
+router.post("/resetPassword", requireGuest, async (req, res) => {
   const { email, password, resetPasswordToken } = req.body;
   jwt.verify(resetPasswordToken, nconf.get("JWT_SECRETKEY"), async err => {
     if (err) {
@@ -82,5 +77,18 @@ router.post("/resetPassword", async (req, res) => {
       res.json(acc.toAuthJSON());
     }
   });
+});
+
+router.post("/logout", requiredAdminLevel(1), (req, res) => {
+  req.session.destroy();
+  res.json({});
+});
+
+router.get("/isloggedIn", (req, res) => {
+  if (!req.isAuthenticated() || req.session.passport.user.email !== req.body.email) {
+    res.status(400).json({ errors: { global: "You aren't you !" } });
+  } else {
+    res.json(User.toAuthJSON(req.session.passport.user));
+  }
 });
 module.exports = router;

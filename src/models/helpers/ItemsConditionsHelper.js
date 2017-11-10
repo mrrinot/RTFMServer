@@ -6,11 +6,11 @@ const _ = require("lodash");
 const { fn, col, where, and } = Sequelize;
 
 function likeString(clause) {
-  return where(fn("lower", col(clause.col)), clause.operator, `%${clause.value}%`);
+  return where(col(clause.col), clause.operator, `%${clause.value}%`);
 }
 
 function numberOperator(clause) {
-  return where(fn("lower", col(clause.col)), clause.operator, clause.value);
+  return where(col(clause.col), clause.operator, clause.value);
 }
 
 function multipleLikeString(clause) {
@@ -24,25 +24,31 @@ function multipleLikeString(clause) {
           `([[:blank:][:punct:]]|^)${term.slice(1, term.length - 1)}([[:blank:][:punct:]]|$)`,
         );
       }
-      return where(fn("lower", col(clause.col)), clause.operator, `%${term}%`);
+      return where(col(clause.col), clause.operator, `%${term}%`);
     }),
   );
   return whereRet;
 }
 
-const conditionsFunc = {
+const ItemFunc = {
   name: multipleLikeString,
   description: likeString,
   level: numberOperator,
   typeId: numberOperator,
+};
+
+const DataFunc = {
   averagePrice: numberOperator,
 };
 
 function parseWhere(whereBody) {
-  const whereClause = {};
+  const whereClause = { Item: {}, Data: {} };
   _.each(whereBody, clause => {
-    if (conditionsFunc[clause.col] !== undefined) {
-      whereClause[clause.col] = conditionsFunc[clause.col](clause);
+    if (ItemFunc[clause.col] !== undefined) {
+      whereClause.Item[clause.col] = ItemFunc[clause.col](clause);
+    }
+    if (DataFunc[clause.col] !== undefined) {
+      whereClause.Data[clause.col] = DataFunc[clause.col](clause);
     }
   });
   return whereClause;
