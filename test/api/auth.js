@@ -6,7 +6,7 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../../index.js");
 
-const should = chai.should();
+const { expect } = chai;
 chai.use(chaiHttp);
 
 describe("Auth", () => {
@@ -16,11 +16,11 @@ describe("Auth", () => {
         .request(server)
         .post("/api/auth/logout")
         .end((err, res) => {
-          res.should.have.status(401);
-          res.text.should.be.a("string");
-          should.not.throw(() => JSON.parse(res.text));
+          expect(res).to.have.status(401);
+          expect(res.text).to.be.a("string");
+          expect(() => JSON.parse(res.text)).to.not.throw();
           const data = JSON.parse(res.text);
-          data.should.have.deep.property("errors.global", "Please login.");
+          expect(data).to.have.deep.property("errors.global", "Please login.");
           done();
         });
     });
