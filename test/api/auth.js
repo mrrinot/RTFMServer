@@ -11,7 +11,7 @@ chai.use(chaiHttp);
 
 describe("Auth", () => {
   describe("Not logged in", () => {
-    it("it should not be able to access API", done => {
+    it("it should not be able to logout", done => {
       chai
         .request(server)
         .post("/api/auth/logout")
@@ -20,8 +20,7 @@ describe("Auth", () => {
           res.text.should.be.a("string");
           should.not.throw(() => JSON.parse(res.text));
           const data = JSON.parse(res.text);
-          data.should.have.property("errors");
-          data.errors.should.have.property("global", "Please login.");
+          data.should.have.deep.property("errors.global", "Please login.");
           done();
         });
     });
