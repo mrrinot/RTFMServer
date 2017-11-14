@@ -8,7 +8,9 @@ const StaticDataHelper = require("./StaticDataHelper");
 const sequelize = require("../../sequelize");
 const _ = require("lodash");
 const Promisify = require("bluebird");
+const winston = require("winston");
 const async = Promisify.promisifyAll(require("async"));
+const fs = require("fs");
 
 const itemTableInstances = {};
 
@@ -23,6 +25,14 @@ class ItemDataHelper {
       ItemDescription: desc,
       ItemDescriptionEffect: effect,
     };
+  }
+
+  static async loadAllModels() {
+    const dates = await TableSummary.findAll();
+    await async.eachAsync(dates, async date => {
+      await ItemDataHelper.createItemTableInstances(date.get({ plain: true }).date);
+    });
+    winston.info("Loaded all table models");
   }
 
   static async addItemsToTable(date, items) {
@@ -70,27 +80,68 @@ class ItemDataHelper {
     });
   }
 
-  static async getLastTable(tableType) {
-    const lastDay = await TableSummary.findOne({ order: [["date", "DESC"]], limit: 1 });
-    const { date } = lastDay.get({ plain: true });
-    if (!itemTableInstances[date]) {
-      await ItemDataHelper.createItemTableInstances(date);
-    }
+  static getTable(date, tableType) {
     return itemTableInstances[date][tableType];
   }
 
-  static async getLastItemData() {
-    const ret = await ItemDataHelper.getLastTable("ItemData");
+  static getItemData(date) {
+    return ItemDataHelper.getTable(date, "ItemData");
+  }
+
+  static getItemDescription(date) {
+    return ItemDataHelper.getTable(date, "ItemDescription");
+  }
+
+  static getItemDescriptionEffect(date) {
+    return ItemDataHelper.getTable(date, "ItemDescriptionEffect");
+  }
+
+  static getLastTable(tableType) {
+    const ret = _.max(Object.keys(itemTableInstances));
+    return itemTableInstances[ret][tableType];
+  }
+
+  static getLastItemData() {
+    return ItemDataHelper.getLastTable("ItemData");
+  }
+
+  static getLastItemDescription() {
+    return ItemDataHelper.getLastTable("ItemDescription");
+  }
+
+  static getLastItemDescriptionEffect() {
+    return ItemDataHelper.getLastTable("ItemDescriptionEffect");
+  }
+
+  static async executeQueryOnDates(dates, fn) {
+    const ret = [];
+    await async.eachOfLimitAsync(dates, 6, async (date, key) => {
+      if (_.indexOf(Object.keys(itemTableInstances), date) !== -1) {
+        const result = await fn(date);
+        if (result !== null) {
+          ret[key] = result;
+        }
+      }
+    });
     return ret;
   }
 
-  static async getLastItemDescription() {
-    const ret = await ItemDataHelper.getLastTable("ItemDescription");
+  static async executeQueryOnTimestamps(timestamps, fn) {
+    const ret = [];
+    await async.eachOfLimitAsync(timestamps, 6, async (timestamp, key) => {
+      const date = new Date(timestamp).format("yyyy_mm_dd");
+      if (_.indexOf(Object.keys(itemTableInstances), date) !== -1) {
+        const result = await fn(date);
+        if (result !== null) {
+          ret[key] = result;
+        }
+      }
+    });
     return ret;
   }
 
-  static async getLastItemDescriptionEffect() {
-    const ret = await ItemDataHelper.getLastTable("ItemDescriptionEffect");
+  static async executeQueryOnAllDates(fn) {
+    const ret = await ItemDataHelper.executeQueryOnDates(Object.keys(itemTableInstances), fn);
     return ret;
   }
 }

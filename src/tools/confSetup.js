@@ -3,6 +3,7 @@
 const path = require("path");
 const nconf = require("nconf");
 const winston = require("winston");
+const _ = require("lodash");
 require("./date.format");
 
 nconf.overrides({
@@ -32,4 +33,9 @@ winston.add(winston.transports.Console, {
   level: nconf.get("verbose") ? "verbose" : "info",
   json: false,
   stringify: true,
+});
+
+_.mixin({
+  deeply: map => (obj, fn) =>
+    map(_.mapValues(obj, v => (_.isPlainObject(v) ? _.deeply(map)(v, fn) : v)), fn),
 });

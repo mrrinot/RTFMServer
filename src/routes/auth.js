@@ -84,7 +84,7 @@ router.post("/logout", requiredAdminLevel(1), (req, res) => {
   res.json({});
 });
 
-router.get("/isloggedIn", (req, res) => {
+router.post("/isLoggedIn", (req, res) => {
   if (!req.isAuthenticated() || req.session.passport.user.email !== req.body.email) {
     res.status(400).json({ errors: { global: "You aren't you !" } });
   } else {

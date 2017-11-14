@@ -2,34 +2,56 @@
 
 const S_Server = require("../static/S_Server");
 const ItemDataHelper = require("./ItemDataHelper");
+const Sequelize = require("sequelize");
+const _ = require("lodash");
+
+const { Op } = Sequelize;
 
 class ItemStatHelper {
   static async getLastAvgPrices(itemId) {
-    const ItemDataTable = await ItemDataHelper.getLastItemData();
-    const avgs = await ItemDataTable.findAll({
+    const avgs = await ItemDataHelper.getLastItemData().findAll({
       where: { itemId },
       include: [{ model: S_Server, as: "server" }],
       order: [["timestamp", "DESC"]],
-      group: ["serverID"],
     });
-    return avgs;
+    return _.chain(avgs)
+      .orderBy("timestamp")
+      .keyBy("serverId")
+      .toArray()
+      .value();
   }
 
   static async getItemPrices(itemId) {
-    const ItemDataTable = await ItemDataHelper.getLastItemData();
-    const ItemDescriptionTable = await ItemDataHelper.getLastItemDescription();
-    const res = await ItemDataTable.findAll({
-      where: { itemId },
-      include: [
-        { model: S_Server, as: "server" },
-        {
-          model: ItemDescriptionTable,
-          as: "itemDescriptions",
-        },
-      ],
-      order: [["timestamp", "ASC"]],
+    const latestPrice = await ItemStatHelper.getLastAvgPrices(itemId);
+    const { timestamp } = latestPrice[0];
+    const res = await ItemDataHelper.executeQueryOnTimestamps(
+      [timestamp - 24 * 60 * 60 * 1000, timestamp],
+      async date =>
+        await ItemDataHelper.getTable(date, "ItemData").findAll({
+          where: { itemId, timestamp: { [Op.gte]: timestamp - 24 * 60 * 60 * 1000 } },
+          include: [
+            { model: S_Server, as: "server" },
+            {
+              model: ItemDataHelper.getTable(date, "ItemDescription"),
+              as: "itemDescriptions",
+            },
+          ],
+          order: [["timestamp", "ASC"]],
+        }),
+    );
+    return _.flatten(res);
+  }
+
+  static async getDatesWithItemPrices(itemId) {
+    const res = await ItemDataHelper.executeQueryOnAllDates(async date => {
+      const ret = await ItemDataHelper.getTable(date, "ItemData").findOne({
+        where: { itemId },
+      });
+      return ret !== null
+        ? new Date(ret.get({ plain: true }).timestamp).format("yyyy_mm_dd")
+        : null;
     });
-    return res;
+    return res.sort();
   }
 }
 

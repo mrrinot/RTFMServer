@@ -2,6 +2,7 @@
 
 const express = require("express");
 const S_Item = require("../models/static/S_Item");
+const Sequelize = require("sequelize");
 const S_PossibleEffect = require("../models/static/S_PossibleEffect");
 const S_ItemType = require("../models/static/S_ItemType");
 const S_Effect = require("../models/static/S_Effect");
@@ -33,15 +34,14 @@ router.post("/", async (req, res) => {
       limit: 50,
     });
     const itemsPriced = [];
-    await async.eachAsync(items, async item => {
+    await async.eachSeriesAsync(items, async item => {
       const newItem = item.get({ plain: true });
       newItem.avgPrices = await ItemStatHelper.getLastAvgPrices(item.id);
       itemsPriced.push(newItem);
     });
     res.json(itemsPriced);
   } else {
-    const ItemDataTable = await ItemDataHelper.getLastItemData();
-    const datas = await ItemDataTable.findAll({
+    const datas = await ItemDataHelper.getLastItemData().findAll({
       where: whereClause.Data,
       include: [
         { model: S_Server, as: "server" },

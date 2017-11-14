@@ -17,10 +17,13 @@ const invite = require("./src/routes/invite");
 const items = require("./src/routes/items");
 const itemStat = require("./src/routes/itemStat");
 const APIKey = require("./src/routes/APIKey");
+const ItemDataHelper = require("./src/models/helpers/ItemDataHelper");
 const itemData = require("./src/routes/itemData");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const { requiredAdminLevel } = require("./src/middlewares");
+
+ItemDataHelper.loadAllModels();
 
 passport.use(
   new LocalStrategy(
