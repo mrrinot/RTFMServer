@@ -1,65 +1,73 @@
 {
-    "name": "rtfmserver",
-    "version": "0.4.0",
-    "description": "Backend for the RTFM website",
-    "main": "index.js",
-    "dependencies": {
-        "async": "^2.5.0",
-        "bcrypt": "^1.0.3",
-        "bluebird": "^3.5.1",
-        "body-parser": "^1.18.2",
-        "connect-redis": "^3.3.2",
-        "cross-env": "^5.1.0",
-        "dotenv": "^4.0.0",
-        "eslint-config-airbnb-base": "^12.0.1",
-        "eslint-config-prettier": "^2.6.0",
-        "eslint-plugin-import": "^2.7.0",
-        "eslint-plugin-prettier": "^2.3.1",
-        "express": "^4.16.1",
-        "express-session": "^1.15.6",
-        "forever": "^0.15.3",
-        "jsonwebtoken": "^8.1.0",
-        "jwt-decode": "^2.2.0",
-        "lodash": "^4.17.4",
-        "mysql2": "^1.4.2",
-        "nconf": "^0.8.5",
-        "node-mailjet": "^3.2.1",
-        "node-pre-gyp": "^0.6.38",
-        "passport": "^0.4.0",
-        "passport-local": "^1.0.0",
-        "prettier": "^1.7.4",
-        "redis": "^2.8.0",
-        "sequelize": "^4.13.2",
-        "serve-static": "^1.13.1",
-        "uuid": "^3.1.0",
-        "winston": "^2.4.0"
-    },
-    "devDependencies": {
-        "eslint": "^4.8.0",
-        "nodemon": "^1.12.1"
-    },
-    "scripts": {
-        "lint": "eslint \"**/*.js\"",
-        "lint:fix": "eslint --fix \"**/*.js\"",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start:prod": "cross-env NODE_ENV=production node index.js --iconsPath ./d2files/d2p --dataPath ./d2files/d2o --langPath ./d2files/d2i/i18n_fr.json",
-        "start:forever": "cross-env NODE_ENV=production forever index.js --iconsPath ./d2files/d2p --dataPath ./d2files/d2o --langPath ./d2files/d2i/i18n_fr.json",
-        "start": "nodemon index.js",
-        "setup": "node setup.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/mrrinot/RTFMServer.git"
-    },
-    "author": "Rinot & Telokis",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/mrrinot/RTFMServer/issues"
-    },
-    "homepage": "https://github.com/mrrinot/RTFMServer#readme",
-    "prettier": {
-        "printWidth": 100,
-        "trailingComma": "all"
-    },
-    "eslintIgnore": ["node_modules/*"]
+  "name": "rtfmserver",
+  "version": "0.4.0",
+  "description": "Backend for the RTFM website",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^2.5.0",
+    "bcrypt": "^1.0.3",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "connect-redis": "^3.3.2",
+    "cross-env": "^5.1.0",
+    "dotenv": "^4.0.0",
+    "eslint-config-airbnb-base": "^12.0.1",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "express": "^4.16.1",
+    "express-session": "^1.15.6",
+    "forever": "^0.15.3",
+    "jsonwebtoken": "^8.1.0",
+    "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.4",
+    "mysql2": "^1.4.2",
+    "nconf": "^0.8.5",
+    "node-mailjet": "^3.2.1",
+    "node-pre-gyp": "^0.6.38",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "prettier": "^1.7.4",
+    "redis": "^2.8.0",
+    "sequelize": "^4.13.2",
+    "serve-static": "^1.13.1",
+    "uuid": "^3.1.0",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "eslint": "^4.8.0",
+    "mocha": "^2.4.5",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.12.1",
+    "proxyquire": "^1.8.0",
+    "sequelize-mock": "^0.10.0"
+  },
+  "scripts": {
+    "lint": "eslint \"**/*.js\"",
+    "lint:fix": "eslint --fix \"**/*.js\"",
+    "test": "mocha --timeout 10000 test/api/**/*.js",
+    "start:prod":
+      "cross-env NODE_ENV=production node index.js --iconsPath ./d2files/d2p --dataPath ./d2files/d2o --langPath ./d2files/d2i/i18n_fr.json",
+    "start:forever":
+      "cross-env NODE_ENV=production forever index.js --iconsPath ./d2files/d2p --dataPath ./d2files/d2o --langPath ./d2files/d2i/i18n_fr.json",
+    "start": "nodemon index.js",
+    "setup": "node setup.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrrinot/RTFMServer.git"
+  },
+  "author": "Rinot & Telokis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrrinot/RTFMServer/issues"
+  },
+  "homepage": "https://github.com/mrrinot/RTFMServer#readme",
+  "prettier": {
+    "printWidth": 100,
+    "trailingComma": "all"
+  },
+  "eslintIgnore": ["node_modules/*"]
 }

@@ -16,6 +16,7 @@
         "no-return-await": "off",
         "no-shadow": ["error", { "allow": ["done", "err"] }],
         "camelcase": "off",
+        "import/no-extraneous-dependencies": "off",
         "prefer-destructuring": ["error", { "VariableDeclarator": { "object": true } }]
     }
 }

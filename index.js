@@ -24,6 +24,10 @@ const LocalStrategy = require("passport-local").Strategy;
 const { requiredAdminLevel } = require("./src/middlewares");
 
 ItemDataHelper.loadAllModels();
+let morgan;
+if (nconf.get("NODE_ENV") === "test") {
+  morgan = require("morgan"); // eslint-disable-line
+}
 
 passport.use(
   new LocalStrategy(
@@ -63,6 +67,10 @@ const client = redis.createClient({
   port: nconf.get("RTFMREDIS_PORT"),
 });
 client.auth(nconf.get("RTFMREDIS_PASSWORD"));
+
+if (morgan) {
+  app.use(morgan("combined"));
+}
 
 app.use(bodyParser.json());
 app.use(
@@ -117,3 +125,5 @@ const port = nconf.get("PORT");
 app.listen(port, () => {
   winston.info(`Server running on port ${port} !`);
 });
+
+module.exports = app;
