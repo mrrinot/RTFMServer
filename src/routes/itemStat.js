@@ -8,15 +8,15 @@ const S_Effect = require("../models/static/S_Effect");
 const S_Server = require("../models/static/S_Server");
 const ItemStatHelper = require("../models/helpers/ItemStatHelper");
 const ItemDataHelper = require("../models/helpers/ItemDataHelper");
+const ItemRecipeHelper = require("../models/helpers/ItemRecipeHelper");
 const _ = require("lodash");
 const Sequelize = require("sequelize");
-const fs = require("fs");
 
 const { Op } = Sequelize;
 const router = express.Router();
 
 router.get("/:itemId", async (req, res) => {
-  const item = await S_Item.find({
+  const item = await S_Item.findOne({
     where: {
       id: req.params.itemId,
     },
@@ -32,10 +32,13 @@ router.get("/:itemId", async (req, res) => {
   if (item !== null) {
     const prices = await ItemStatHelper.getItemPrices(item.id);
     const dates = await ItemStatHelper.getDatesWithItemPrices(item.id);
+    const recipe = await ItemRecipeHelper.getItemRecipe(item.id);
+    // console.log("recipe ", recipe);
     const resData = {
       item: item.get({ plain: true }),
       prices,
       dates,
+      recipe,
     };
     res.json(resData);
   } else {

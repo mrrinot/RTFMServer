@@ -10,7 +10,6 @@ const _ = require("lodash");
 const Promisify = require("bluebird");
 const winston = require("winston");
 const async = Promisify.promisifyAll(require("async"));
-const fs = require("fs");
 
 const itemTableInstances = {};
 

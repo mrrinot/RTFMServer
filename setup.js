@@ -23,16 +23,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
 
 (async function() {
   await sequelize.sync({ force: !nconf.get("noSync") });
-  // if (nconf.get("noSync")) {
-  //   await S_Job.drop();
-  //   await S_Item.drop();
-  //   await S_ItemType.drop();
-  //   await S_Ingredient.drop();
-  //   await S_Recipe.drop();
-  //   await S_Effect.drop();
-  //   await S_PossibleEffect.drop();
-  //   await S_Server.drop();
-  // }
   const data = file => DataManager[file];
 
   let jobs = data("Jobs");
@@ -49,8 +39,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     await S_Job.bulkCreate(jobs, { validate: true });
     winston.info("Jobs parsed...");
   } catch (e) {
-    winston.error("Unable to parse jobs.");
-    console.log(e);
     winston.error("Unable to parse jobs.");
     process.exit(1);
   }
@@ -69,8 +57,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     winston.info("ItemTypes parsed...");
   } catch (e) {
     winston.error("Unable to parse itemTypes.");
-    console.log(e);
-    winston.error("Unable to parse itemTypes.");
     process.exit(1);
   }
 
@@ -87,8 +73,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     await S_Effect.bulkCreate(effects, { validate: true });
     winston.info("Effects parsed...");
   } catch (e) {
-    winston.error("Unable to parse effects.");
-    console.log(e);
     winston.error("Unable to parse effects.");
     process.exit(1);
   }
@@ -107,8 +91,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     await S_Item.bulkCreate(items, { validate: true });
     winston.info("Items parsed...");
   } catch (e) {
-    winston.error("Unable to parse items.");
-    console.log(e);
     winston.error("Unable to parse items.");
     process.exit(1);
   }
@@ -136,8 +118,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     winston.info("PossibleEffects created...");
   } catch (e) {
     winston.error("Unable to create possibleEffects.");
-    console.log(e);
-    winston.error("Unable to create possibleEffects.");
     process.exit(1);
   }
 
@@ -155,8 +135,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     await S_Recipe.bulkCreate(recipes, { validate: true });
     winston.info("Recipes parsed...");
   } catch (e) {
-    winston.error("Unable to parse recipes.");
-    console.log(e);
     winston.error("Unable to parse recipes.");
     process.exit(1);
   }
@@ -185,8 +163,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     winston.info("Ingredients created...");
   } catch (e) {
     winston.error("Unable to create ingredients.");
-    console.log(e);
-    winston.error("Unable to create ingredients.");
     process.exit(1);
   }
 
@@ -199,8 +175,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     await S_Server.bulkCreate(servers, { validate: true });
     winston.info("Servers parsed...");
   } catch (e) {
-    winston.error("Unable to create servers.");
-    console.log(e);
     winston.error("Unable to create servers.");
     process.exit(1);
   }
@@ -216,8 +190,6 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     };
     await User.create(user);
   } catch (e) {
-    winston.error("Unable to add dummy user");
-    console.log(e);
     winston.error("Unable to add dummy user");
     process.exit(1);
   }

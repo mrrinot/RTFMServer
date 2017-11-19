@@ -21,9 +21,23 @@ class ItemStatHelper {
       .value();
   }
 
+  static async getLastPrices(itemId) {
+    const desc = ItemDataHelper.getLastItemDescription();
+    const prices = await ItemDataHelper.getLastItemData().findAll({
+      where: { itemId },
+      include: [{ model: S_Server, as: "server" }, { model: desc, as: "itemDescriptions" }],
+      order: [["timestamp", "DESC"]],
+    });
+    return _.chain(prices)
+      .orderBy("timestamp")
+      .keyBy("serverId")
+      .toArray()
+      .value();
+  }
+
   static async getItemPrices(itemId) {
     const latestPrice = await ItemStatHelper.getLastAvgPrices(itemId);
-    const { timestamp } = latestPrice[0];
+    const timestamp = latestPrice.length > 0 ? latestPrice[0].timestamp : Date.now();
     const res = await ItemDataHelper.executeQueryOnTimestamps(
       [timestamp - 24 * 60 * 60 * 1000, timestamp],
       async date =>
