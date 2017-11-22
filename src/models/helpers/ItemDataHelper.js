@@ -27,6 +27,7 @@ class ItemDataHelper {
   }
 
   static async loadAllModels() {
+    await sequelize.sync({ force: false });
     const dates = await ItemDataTableIndex.findAll();
     await async.eachAsync(dates, async date => {
       await ItemDataHelper.createItemTableInstances(date.get({ plain: true }).date);

@@ -2,6 +2,8 @@
 
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
+const S_Item = require("./static/S_Item");
+const S_Server = require("./static/S_Server");
 
 module.exports = function RecipeCosts(date) {
   const recipe = sequelize.define(
@@ -12,7 +14,7 @@ module.exports = function RecipeCosts(date) {
         type: Sequelize.INTEGER,
         autoIncrement: true,
       },
-      date: {
+      timestamp: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -41,7 +43,20 @@ module.exports = function RecipeCosts(date) {
         allowNull: false,
       },
     },
-    { timestamps: false },
+    {
+      timestamps: false,
+      tableName: `recipeCost_${date}`,
+    },
   );
+
+  recipe.belongsTo(S_Item, {
+    as: "item",
+    foreignKey: "itemId",
+  });
+
+  recipe.belongsTo(S_Server, {
+    as: "server",
+    foreignKey: "serverId",
+  });
   return recipe;
 };

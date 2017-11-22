@@ -25,6 +25,7 @@ class RecipeCostHelper {
   }
 
   static async loadAllModels() {
+    await sequelize.sync({ force: false });
     const dates = await RecipeCostsTableIndex.findAll();
     await async.eachAsync(dates, async date => {
       await RecipeCostHelper.createRecipeTableInstances(date.get({ plain: true }).date);
@@ -59,8 +60,16 @@ class RecipeCostHelper {
     });
     const sortedDatas = _.keyBy(datas, "itemId");
     await async.eachOfLimitAsync(sortedDatas, 1, (data, itemId) => {
-      console.log(data);
-      console.log(craftableItemsList[itemId]);
+      const recipe = craftableItemsList[itemId];
+      if (recipe) {
+        const recipeCost = {
+          itemId: data.itemId,
+          serverId: data.serverId,
+          timestamp: data.timestamp,
+        };
+        console.log(data);
+        console.log(recipe);
+      }
     });
   }
 
