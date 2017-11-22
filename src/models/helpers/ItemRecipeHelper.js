@@ -49,6 +49,9 @@ class ItemRecipeHelper {
     });
     const allIng = [];
     const ret = await ItemRecipeHelper.getIngredientQuantitiesOf(quantities, ingredients, 1);
+    if (_.difference(_.toArray(ret), _.toArray(quantities)).length === 0) {
+      return [];
+    }
     await async.eachOfLimitAsync(ret, 10, async (quantity, id) => {
       const item = await S_Item.findOne({
         where: {
@@ -115,14 +118,17 @@ class ItemRecipeHelper {
         },
       ],
     });
-    const ingredients = [];
-    await async.eachLimitAsync(ret.ingredients, 6, async ingredient => {
-      const price = await ItemStatHelper.getLastPrices(ingredient.id);
-      ingredients.push({ item: ingredient.get({ plain: true }), price });
-    });
     const usedIn = await ItemRecipeHelper.getItemUsage(itemId);
-    const allIngredients = await ItemRecipeHelper.getAllIngredients(ret.ingredients);
-    return { ingredients, usedIn, allIngredients };
+    if (ret !== null) {
+      const ingredients = [];
+      await async.eachLimitAsync(ret.ingredients, 6, async ingredient => {
+        const price = await ItemStatHelper.getLastPrices(ingredient.id);
+        ingredients.push({ item: ingredient.get({ plain: true }), price });
+      });
+      const allIngredients = await ItemRecipeHelper.getAllIngredients(ret.ingredients);
+      return { ingredients, usedIn, allIngredients };
+    }
+    return { ingredients: [], usedIn, allIngredients: [] };
   }
 }
 

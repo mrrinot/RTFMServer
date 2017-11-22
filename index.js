@@ -18,12 +18,14 @@ const items = require("./src/routes/items");
 const itemStat = require("./src/routes/itemStat");
 const APIKey = require("./src/routes/APIKey");
 const ItemDataHelper = require("./src/models/helpers/ItemDataHelper");
+const RecipeCostHelper = require("./src/models/helpers/RecipeCostHelper");
 const itemData = require("./src/routes/itemData");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const { requiredAdminLevel } = require("./src/middlewares");
 
 ItemDataHelper.loadAllModels();
+RecipeCostHelper.loadAllModels();
 let morgan;
 if (nconf.get("NODE_ENV") === "test") {
   morgan = require("morgan"); // eslint-disable-line

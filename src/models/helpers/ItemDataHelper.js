@@ -3,7 +3,7 @@
 const ItemData = require("../ItemData");
 const ItemDescription = require("../ItemDescription");
 const ItemDescriptionEffect = require("../ItemDescriptionEffect");
-const TableSummary = require("../TableSummary");
+const ItemDataTableIndex = require("../ItemDataTableIndex");
 const StaticDataHelper = require("./StaticDataHelper");
 const sequelize = require("../../sequelize");
 const _ = require("lodash");
@@ -27,11 +27,11 @@ class ItemDataHelper {
   }
 
   static async loadAllModels() {
-    const dates = await TableSummary.findAll();
+    const dates = await ItemDataTableIndex.findAll();
     await async.eachAsync(dates, async date => {
       await ItemDataHelper.createItemTableInstances(date.get({ plain: true }).date);
     });
-    winston.info("Loaded all table models");
+    winston.info("Loaded all item table models");
   }
 
   static async addItemsToTable(date, items) {
@@ -71,7 +71,7 @@ class ItemDataHelper {
       (sorted[date] = sorted[date] || []).push(item);
     });
     await async.eachOfLimitAsync(sorted, 4, async (itemList, date) => {
-      await TableSummary.findOrCreate({ where: { date }, defaults: { date } });
+      await ItemDataTableIndex.findOrCreate({ where: { date }, defaults: { date } });
       if (!itemTableInstances[date]) {
         await ItemDataHelper.createItemTableInstances(date);
       }

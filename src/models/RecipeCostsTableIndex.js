@@ -3,8 +3,8 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../sequelize");
 
-const TableSummary = sequelize.define(
-  "tableSummary",
+const RecipeCostsTableIndex = sequelize.define(
+  "recipeCostTableIndex",
   {
     id: {
       primaryKey: true,
@@ -19,4 +19,4 @@ const TableSummary = sequelize.define(
   { timestamps: false },
 );
 
-module.exports = TableSummary;
+module.exports = RecipeCostsTableIndex;
