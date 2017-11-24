@@ -42,16 +42,13 @@ class ItemRecipeHelper {
     return usedIn;
   }
 
-  static async getAllIngredients(ingredients) {
+  static async getAllIngredients(ingredients, withPrices) {
     const quantities = {};
     _.each(ingredients, ing => {
       quantities[ing.id] = (quantities[ing.id] || 0) + ing.s_ingredient.quantity;
     });
     const allIng = [];
     const ret = await ItemRecipeHelper.getIngredientQuantitiesOf(quantities, ingredients, 1);
-    if (_.difference(_.toArray(ret), _.toArray(quantities)).length === 0) {
-      return [];
-    }
     await async.eachOfLimitAsync(ret, 10, async (quantity, id) => {
       const item = await S_Item.findOne({
         where: {
@@ -66,8 +63,12 @@ class ItemRecipeHelper {
           { model: S_ItemType, as: "type" },
         ],
       });
-      const price = await ItemStatHelper.getLastPrices(id);
-      allIng.push({ item, price, quantity });
+      const ing = { item, quantity };
+      if (withPrices) {
+        const price = await ItemStatHelper.getLastPrices(id);
+        ing.price = price;
+      }
+      allIng.push(ing);
     });
     return allIng;
   }
@@ -118,15 +119,22 @@ class ItemRecipeHelper {
         },
       ],
     });
-    const usedIn = await ItemRecipeHelper.getItemUsage(itemId);
+    const usedIn = _.sortBy(await ItemRecipeHelper.getItemUsage(itemId), [
+      used => used.item.level,
+      used => used.item.name,
+    ]);
     if (ret !== null) {
       const ingredients = [];
       await async.eachLimitAsync(ret.ingredients, 6, async ingredient => {
         const price = await ItemStatHelper.getLastPrices(ingredient.id);
         ingredients.push({ item: ingredient.get({ plain: true }), price });
       });
-      const allIngredients = await ItemRecipeHelper.getAllIngredients(ret.ingredients);
-      return { ingredients, usedIn, allIngredients };
+      const allIngredients = _.sortBy(
+        await ItemRecipeHelper.getAllIngredients(ret.ingredients, true),
+        [used => used.item.level, used => used.item.name],
+      );
+      const ingSorted = _.sortBy(ingredients, [used => used.item.level, used => used.item.name]);
+      return { ingredients: ingSorted, usedIn, allIngredients };
     }
     return { ingredients: [], usedIn, allIngredients: [] };
   }

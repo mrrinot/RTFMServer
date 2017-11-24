@@ -34,6 +34,22 @@ module.exports = function RecipeCosts(date) {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      averageCostDifference: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      actualCostDifference: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      averageCostDifferencePercentage: {
+        type: Sequelize.DECIMAL,
+        allowNull: false,
+      },
+      actualCostDifferencePercentage: {
+        type: Sequelize.DECIMAL,
+        allowNull: false,
+      },
       containsAverageUnknown: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
