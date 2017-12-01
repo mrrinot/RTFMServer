@@ -17,6 +17,7 @@ const invite = require("./src/routes/invite");
 const items = require("./src/routes/items");
 const itemStat = require("./src/routes/itemStat");
 const APIKey = require("./src/routes/APIKey");
+const recipes = require("./src/routes/recipes");
 const ItemDataHelper = require("./src/models/helpers/ItemDataHelper");
 const RecipeCostHelper = require("./src/models/helpers/RecipeCostHelper");
 const itemData = require("./src/routes/itemData");
@@ -80,11 +81,11 @@ app.use(
     store: new RedisStore({
       logErrors: true,
       client,
-      ttl: 3600,
+      ttl: 3600 * 24 * 30,
     }),
     secret: nconf.get("SESSION_SECRET"),
     proxy: true,
-    cookie: { maxAge: 1000 * 60 * 60 },
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
     saveUninitialized: false,
     resave: false,
   }),
@@ -99,6 +100,7 @@ app.use("/api/invite", invite);
 app.use("/api/createAPIKey", requiredAdminLevel(2), APIKey);
 app.use("/api/itemData", itemData);
 app.use("/api/itemStat", requiredAdminLevel(1), itemStat);
+app.use("/api/recipes", requiredAdminLevel(1), recipes);
 
 let iconsPath = nconf.get("iconsPath");
 

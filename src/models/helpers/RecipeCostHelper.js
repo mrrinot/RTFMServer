@@ -116,7 +116,6 @@ class RecipeCostHelper {
       if (recipe) {
         const lowest = RecipeCostHelper.calculateLowestActualPrice(data);
         const totals = RecipeCostHelper.calculateTotalPrices(sortedDatas, recipe.allIngredients);
-        // console.log(data.averagePrice, lowest, totals.avg.price, totals.actual.price);
         if (data.averagePrice === -1) totals.avg.unknown = true;
         recipeCostList.push({
           itemId: data.itemId,
@@ -144,69 +143,45 @@ class RecipeCostHelper {
     winston.info(`Finished adding ${ret.length} recipes cost`);
   }
 
-  //   static getTable(date, tableType) {
-  //     return recipeTableInstances[date][tableType];
-  //   }
+  static getRecipeTable(date) {
+    return recipeTableInstances[date].RecipeCosts;
+  }
 
-  //   static getItemData(date) {
-  //     return RecipeCostHelper.getTable(date, "ItemData");
-  //   }
+  static getLastRecipeTable() {
+    const ret = _.max(Object.keys(recipeTableInstances));
+    return recipeTableInstances[ret].RecipeCosts;
+  }
 
-  //   static getItemDescription(date) {
-  //     return RecipeCostHelper.getTable(date, "ItemDescription");
-  //   }
+  static async executeQueryOnDates(dates, fn) {
+    const ret = [];
+    await async.eachOfLimitAsync(dates, 6, async (date, key) => {
+      if (_.indexOf(Object.keys(recipeTableInstances), date) !== -1) {
+        const result = await fn(date);
+        if (result !== null) {
+          ret[key] = result;
+        }
+      }
+    });
+    return ret;
+  }
 
-  //   static getItemDescriptionEffect(date) {
-  //     return RecipeCostHelper.getTable(date, "ItemDescriptionEffect");
-  //   }
+  static async executeQueryOnTimestamps(timestamps, fn) {
+    const ret = [];
+    await async.eachOfLimitAsync(timestamps, 6, async (timestamp, key) => {
+      const date = new Date(timestamp).format("yyyy_mm_dd");
+      if (_.indexOf(Object.keys(recipeTableInstances), date) !== -1) {
+        const result = await fn(date);
+        if (result !== null) {
+          ret[key] = result;
+        }
+      }
+    });
+    return ret;
+  }
 
-  //   static getLastTable(tableType) {
-  //     const ret = _.max(Object.keys(recipeTableInstances));
-  //     return recipeTableInstances[ret][tableType];
-  //   }
-
-  //   static getLastItemData() {
-  //     return RecipeCostHelper.getLastTable("ItemData");
-  //   }
-
-  //   static getLastItemDescription() {
-  //     return RecipeCostHelper.getLastTable("ItemDescription");
-  //   }
-
-  //   static getLastItemDescriptionEffect() {
-  //     return RecipeCostHelper.getLastTable("ItemDescriptionEffect");
-  //   }
-
-  //   static async executeQueryOnDates(dates, fn) {
-  //     const ret = [];
-  //     await async.eachOfLimitAsync(dates, 6, async (date, key) => {
-  //       if (_.indexOf(Object.keys(recipeTableInstances), date) !== -1) {
-  //         const result = await fn(date);
-  //         if (result !== null) {
-  //           ret[key] = result;
-  //         }
-  //       }
-  //     });
-  //     return ret;
-  //   }
-
-  //   static async executeQueryOnTimestamps(timestamps, fn) {
-  //     const ret = [];
-  //     await async.eachOfLimitAsync(timestamps, 6, async (timestamp, key) => {
-  //       const date = new Date(timestamp).format("yyyy_mm_dd");
-  //       if (_.indexOf(Object.keys(recipeTableInstances), date) !== -1) {
-  //         const result = await fn(date);
-  //         if (result !== null) {
-  //           ret[key] = result;
-  //         }
-  //       }
-  //     });
-  //     return ret;
-  //   }
-
-  //   static async executeQueryOnAllDates(fn) {
-  //     const ret = await RecipeCostHelper.executeQueryOnDates(Object.keys(recipeTableInstances), fn);
-  //     return ret;
-  //   }
+  static async executeQueryOnAllDates(fn) {
+    const ret = await RecipeCostHelper.executeQueryOnDates(Object.keys(recipeTableInstances), fn);
+    return ret;
+  }
 }
 module.exports = RecipeCostHelper;

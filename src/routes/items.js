@@ -2,7 +2,6 @@
 
 const express = require("express");
 const S_Item = require("../models/static/S_Item");
-const Sequelize = require("sequelize");
 const S_PossibleEffect = require("../models/static/S_PossibleEffect");
 const S_ItemType = require("../models/static/S_ItemType");
 const S_Effect = require("../models/static/S_Effect");
