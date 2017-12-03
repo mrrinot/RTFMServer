@@ -5,23 +5,24 @@ const S_Item = require("../models/static/S_Item");
 const S_PossibleEffect = require("../models/static/S_PossibleEffect");
 const S_ItemType = require("../models/static/S_ItemType");
 const S_Effect = require("../models/static/S_Effect");
-const S_Server = require("../models/static/S_Server");
 const ItemStatHelper = require("../models/helpers/ItemStatHelper");
-const ItemDataHelper = require("../models/helpers/ItemDataHelper");
 const RecipeCostHelper = require("../models/helpers/RecipeCostHelper");
+const RecipeCosts = require("../models/RecipeCosts");
+const User = require("../models/User");
 const Promisify = require("bluebird");
 const async = Promisify.promisifyAll(require("async"));
 const { parseWhere } = require("../models/helpers/ItemsConditionsHelper");
+const { requiredAdminLevel } = require("../middlewares");
 const _ = require("lodash");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", requiredAdminLevel(1), async (req, res) => {
   const whereClause = parseWhere(req.body.where);
 
-  console.log(whereClause);
-  const ret = await RecipeCostHelper.getLastRecipeTable().findAll({
-    where: {},
+  console.log("WHERE: ", whereClause);
+  const ret = await RecipeCosts.findAll({
+    where: whereClause.Recipe,
     include: [
       {
         model: S_Item,
@@ -37,6 +38,7 @@ router.post("/", async (req, res) => {
         ],
       },
     ],
+    order: whereClause.Order,
     limit: 50,
   });
   const itemsPriced = [];
@@ -46,6 +48,16 @@ router.post("/", async (req, res) => {
     itemsPriced.push(newRecipe);
   });
   res.json(itemsPriced);
+});
+
+router.post("/compute", async (req, res) => {
+  const account = await User.find({ where: { APIKey: req.body.APIKey } });
+  if (account !== null) {
+    await RecipeCostHelper.computeAllRecipeCost();
+    res.json({});
+  } else {
+    res.status(401).json({ errors: { global: "Not authorized" } });
+  }
 });
 
 module.exports = router;

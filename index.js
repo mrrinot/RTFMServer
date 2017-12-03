@@ -75,7 +75,7 @@ if (morgan) {
   app.use(morgan("combined"));
 }
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
   session({
     store: new RedisStore({
@@ -100,7 +100,7 @@ app.use("/api/invite", invite);
 app.use("/api/createAPIKey", requiredAdminLevel(2), APIKey);
 app.use("/api/itemData", itemData);
 app.use("/api/itemStat", requiredAdminLevel(1), itemStat);
-app.use("/api/recipes", requiredAdminLevel(1), recipes);
+app.use("/api/recipes", recipes);
 
 let iconsPath = nconf.get("iconsPath");
 
