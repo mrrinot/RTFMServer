@@ -1,6 +1,6 @@
 {
     "name": "rtfmserver",
-    "version": "0.5.3",
+    "version": "0.5.4",
     "description": "Backend for the RTFM website",
     "main": "index.js",
     "dependencies": {
@@ -68,7 +68,5 @@
         "printWidth": 100,
         "trailingComma": "all"
     },
-    "eslintIgnore": [
-        "node_modules/*"
-    ]
+    "eslintIgnore": ["node_modules/*"]
 }
