@@ -9,7 +9,7 @@ const bcrypt = require("bcrypt");
 
 require("./src/tools/confSetup");
 const sequelize = require("./src/sequelize");
-// const User = require("./src/models/User");
+const User = require("./src/models/User");
 const S_Job = require("./src/models/static/S_Job");
 const S_Item = require("./src/models/static/S_Item");
 const S_ItemType = require("./src/models/static/S_ItemType");
@@ -22,7 +22,17 @@ const DataManager = require("./src/conversion/DataManager");
 const CriterionConverter = require("./src/conversion/CriterionConverter");
 
 (async function() {
-  await sequelize.sync({ force: !nconf.get("noSync") });
+  const force = !nconf.get("noSync");
+  await Promise.all([
+    S_Job.sync({ force }),
+    S_Item.sync({ force }),
+    S_ItemType.sync({ force }),
+    S_Ingredient.sync({ force }),
+    S_Recipe.sync({ force }),
+    S_Effect.sync({ force }),
+    S_PossibleEffect.sync({ force }),
+    S_Server.sync({ force }),
+  ]);
   const data = file => DataManager[file];
 
   let jobs = data("Jobs");
@@ -179,20 +189,20 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
     process.exit(1);
   }
 
-  // try {
-  //   winston.info("Creating dummy user");
-  //   const user = {
-  //     email: "test@test.com",
-  //     pseudo: "SuperCoolGuy",
-  //     adminLevel: 3,
-  //     APIKey: "5ecae6b1-4e72-4f21-8304-c392e4b8e9da",
-  //     password: bcrypt.hashSync("pass", nconf.get("bcrypt_rounds")),
-  //   };
-  //   await User.create(user);
-  // } catch (e) {
-  //   winston.error("Unable to add dummy user");
-  //   process.exit(1);
-  // }
+  try {
+    winston.info("Creating dummy user");
+    const user = {
+      email: "test@test.com",
+      pseudo: "SuperCoolGuy",
+      adminLevel: 3,
+      APIKey: "5ecae6b1-4e72-4f21-8304-c392e4b8e9da",
+      password: bcrypt.hashSync("pass", nconf.get("bcrypt_rounds")),
+    };
+    await User.create(user);
+  } catch (e) {
+    winston.error("Unable to add dummy user");
+    process.exit(1);
+  }
 
   const recipeBois = await S_Item.findOne({
     where: { id: 694 },
@@ -205,3 +215,4 @@ const CriterionConverter = require("./src/conversion/CriterionConverter");
 
   // console.log(JSON.stringify(recipeBois.get({ plain: true }), null, 4));
 })();
+

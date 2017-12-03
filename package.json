@@ -68,5 +68,7 @@
         "printWidth": 100,
         "trailingComma": "all"
     },
-    "eslintIgnore": ["node_modules/*"]
+    "eslintIgnore": [
+        "node_modules/*"
+    ]
 }
