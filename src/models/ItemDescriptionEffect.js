@@ -31,6 +31,7 @@ module.exports = function ItemDescriptionEffect(date) {
   effectInstance.belongsTo(S_Effect, {
     as: "effect",
     foreignKey: "effectId",
+    constraints: false,
   });
 
   effectInstance.getDescription = function getDescription(effect) {

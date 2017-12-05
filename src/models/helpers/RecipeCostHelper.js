@@ -5,12 +5,10 @@ const S_Item = require("../static/S_Item");
 const S_Recipe = require("../static/S_Recipe");
 const ItemDataHelper = require("../helpers/ItemDataHelper");
 const ItemRecipeHelper = require("../helpers/ItemRecipeHelper");
-const sequelize = require("../../sequelize");
 const _ = require("lodash");
 const Promisify = require("bluebird");
 const winston = require("winston");
 const async = Promisify.promisifyAll(require("async"));
-const moment = require("moment");
 
 let craftableItemsList = [];
 
@@ -30,7 +28,7 @@ class RecipeCostHelper {
       allIngRecipes.push({ allIngredients, resultId: recipe.resultId, jobId: recipe.jobId });
     });
     craftableItemsList = _.keyBy(allIngRecipes, "resultId");
-    winston.info("Loaded all recipe");
+    winston.verbose("Loaded all recipe");
   }
 
   static calculateLowestActualPrice(data) {
@@ -83,7 +81,7 @@ class RecipeCostHelper {
       .keyBy("itemId")
       .value();
     const recipeCostList = [];
-    winston.info(`There is ${Object.keys(sortedDatas).length} different items to be treated`);
+    winston.verbose(`There is ${Object.keys(sortedDatas).length} different items to be treated`);
     _.forEach(sortedDatas, (data, itemId) => {
       const recipe = craftableItemsList[itemId];
       if (recipe) {
@@ -108,13 +106,13 @@ class RecipeCostHelper {
         });
       }
     });
-    winston.info("Finished processing recipes cost, droping database, then inserting");
+    winston.verbose("Finished processing recipes cost, droping database, then inserting");
     await RecipeCosts.sync({ force: true });
     const ret = await RecipeCosts.bulkCreate(recipeCostList, {
       validate: true,
       returning: true,
     });
-    winston.info(`Finished adding ${ret.length} recipes cost`);
+    winston.verbose(`Finished adding ${ret.length} recipes cost`);
   }
 }
 module.exports = RecipeCostHelper;

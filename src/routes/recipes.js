@@ -20,7 +20,6 @@ const router = express.Router();
 router.post("/", requiredAdminLevel(1), async (req, res) => {
   const whereClause = parseWhere(req.body.where);
 
-  console.log("WHERE: ", whereClause);
   const ret = await RecipeCosts.findAll({
     where: whereClause.Recipe,
     include: [

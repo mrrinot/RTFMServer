@@ -66,11 +66,13 @@ const RecipeCost = sequelize.define(
 RecipeCost.belongsTo(S_Item, {
   as: "item",
   foreignKey: "itemId",
+  constraints: false,
 });
 
 RecipeCost.belongsTo(S_Server, {
   as: "server",
   foreignKey: "serverId",
+  constraints: false,
 });
 
 module.exports = RecipeCost;

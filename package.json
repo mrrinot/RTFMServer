@@ -1,6 +1,6 @@
 {
     "name": "rtfmserver",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "description": "Backend for the RTFM website",
     "main": "index.js",
     "dependencies": {
@@ -49,8 +49,8 @@
         "lint": "eslint \"**/*.js\"",
         "lint:fix": "eslint --fix \"**/*.js\"",
         "test": "mocha --timeout 10000 test/api/**/*.js",
-        "start:prod": "cross-env NODE_ENV=production node index.js --iconsPath ./d2files/d2p --dataPath ./d2files/d2o --langPath ./d2files/d2i/i18n_fr.json --archivePath ../../crawl/Archive",
-        "start:forever": "cross-env NODE_ENV=production forever index.js --iconsPath ./d2files/d2p --dataPath ./d2files/d2o --langPath ./d2files/d2i/i18n_fr.json --archivePath ../../crawl/Archive",
+        "start:prod": "cross-env NODE_ENV=production node index.js --iconsPath ./d2files/d2p --dataPath ./d2files/d2o --langPath ./d2files/d2i/i18n_fr.json --archivePath /crawl",
+        "start:forever": "cross-env NODE_ENV=production forever index.js --iconsPath ./d2files/d2p --dataPath ./d2files/d2o --langPath ./d2files/d2i/i18n_fr.json --archivePath /crawl",
         "start": "nodemon index.js",
         "setup": "node setup.js"
     },
