@@ -53,10 +53,7 @@ class ItemStatHelper {
           order: [["timestamp", "ASC"]],
         }),
     );
-    return _.chain(res)
-      .flatten()
-      .compact()
-      .value();
+    return _.flatten(res);
   }
 
   static async getDatesWithItemPrices(itemId) {

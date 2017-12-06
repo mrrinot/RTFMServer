@@ -73,13 +73,9 @@ const S_Item = sequelize.define(
 S_Item.belongsTo(S_ItemType, {
   as: "type",
   foreignKey: "typeId",
-  constraints: false,
 });
 
-S_Item.hasMany(S_PossibleEffect, {
-  as: "possibleEffects",
-  constraints: false,
-});
+S_Item.hasMany(S_PossibleEffect, { as: "possibleEffects" });
 
 S_Item.convert = function convertItem(item) {
   return {

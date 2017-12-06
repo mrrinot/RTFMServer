@@ -46,7 +46,6 @@ const S_PossibleEffect = sequelize.define(
 S_PossibleEffect.belongsTo(S_Effect, {
   as: "effect",
   foreignKey: "effectId",
-  constraints: false,
 });
 
 let effects;

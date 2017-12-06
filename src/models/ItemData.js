@@ -33,13 +33,11 @@ module.exports = function ItemData(date, descInstance) {
   data.belongsTo(S_Item, {
     as: "item",
     foreignKey: "itemId",
-    constraints: false,
   });
 
   data.belongsTo(S_Server, {
     as: "server",
     foreignKey: "serverId",
-    constraints: false,
   });
 
   data.hasMany(descInstance, {

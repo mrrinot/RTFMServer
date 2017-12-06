@@ -29,6 +29,7 @@ router.post("/", async (req, res) => {
         { model: S_ItemType, as: "type" },
       ],
       order: [["name", "ASC"]],
+      logging: console.log,
       limit: 50,
     });
     const itemsPriced = [];

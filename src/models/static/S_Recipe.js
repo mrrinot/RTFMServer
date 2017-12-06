@@ -43,14 +43,12 @@ S_Recipe.belongsToMany(S_Item, {
 S_Recipe.belongsTo(S_Job, {
   as: "job",
   foreignKey: "jobId",
-  constraints: false,
 });
 
 // S_Recipe.resultId
 S_Recipe.belongsTo(S_Item, {
   as: "result",
   foreignKey: "resultId",
-  constraints: false,
 });
 
 module.exports = S_Recipe;
