@@ -29,13 +29,12 @@ router.post("/", async (req, res) => {
         { model: S_ItemType, as: "type" },
       ],
       order: [["name", "ASC"]],
-      logging: console.log,
       limit: 50,
     });
     const itemsPriced = [];
     await async.eachSeriesAsync(items, async item => {
       const newItem = item.get({ plain: true });
-      newItem.avgPrices = await ItemStatHelper.getLastAvgPrices(item.id);
+      newItem.avgPrices = await ItemStatHelper.getLastPrices(item.id);
       itemsPriced.push(newItem);
     });
     res.json(itemsPriced);
@@ -44,6 +43,10 @@ router.post("/", async (req, res) => {
       where: whereClause.Data,
       include: [
         { model: S_Server, as: "server" },
+        {
+          model: ItemDataHelper.getLastItemDescription(),
+          as: "itemDescriptions",
+        },
         {
           model: S_Item,
           as: "item",
@@ -59,11 +62,15 @@ router.post("/", async (req, res) => {
         },
       ],
       order: [["averagePrice", "DESC"], ["timestamp", "DESC"]],
-      group: ["item.id"],
       limit: 50,
     });
+    const ordered = _.chain(datas)
+      .orderBy(["timestamp"], ["DESC"])
+      .keyBy("itemId")
+      .toArray()
+      .value();
     const items = [];
-    _.each(datas, data => {
+    _.each(ordered, data => {
       const temp = data.get({ plain: true });
       const newItem = temp.item;
       newItem.avgPrices = [
@@ -73,6 +80,7 @@ router.post("/", async (req, res) => {
           timestamp: temp.timestamp,
           serverId: temp.serverId,
           server: temp.server,
+          itemDescriptions: temp.itemDescriptions,
         },
       ];
       items.push(newItem);

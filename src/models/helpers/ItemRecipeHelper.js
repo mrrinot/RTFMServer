@@ -88,7 +88,8 @@ class ItemRecipeHelper {
       if (isCraftable !== null) {
         _.each(isCraftable.ingredients, craftIng => {
           newQuan[craftIng.id] =
-            (newQuan[craftIng.id] || 0) + craftIng.s_ingredient.quantity * numberOfItem;
+            (newQuan[craftIng.id] || 0) +
+            craftIng.s_ingredient.quantity * numberOfItem * ing.s_ingredient.quantity;
         });
         delete newQuan[ing.id];
         newQuan = await ItemRecipeHelper.getIngredientQuantitiesOf(

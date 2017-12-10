@@ -35,25 +35,26 @@ class ItemStatHelper {
       .value();
   }
 
-  static async getItemPrices(itemId) {
-    const latestPrice = await ItemStatHelper.getLastAvgPrices(itemId);
-    const timestamp = latestPrice.length > 0 ? latestPrice[0].timestamp : Date.now();
-    const res = await ItemDataHelper.executeQueryOnTimestamps(
-      [timestamp - 24 * 60 * 60 * 1000, timestamp],
-      async date =>
-        await ItemDataHelper.getTable(date, "ItemData").findAll({
-          where: { itemId, timestamp: { [Op.gte]: timestamp - 24 * 60 * 60 * 1000 } },
-          include: [
-            { model: S_Server, as: "server" },
-            {
-              model: ItemDataHelper.getTable(date, "ItemDescription"),
-              as: "itemDescriptions",
-            },
-          ],
-          order: [["timestamp", "ASC"]],
-        }),
-    );
-    return _.flatten(res);
+  static async getItemPrices(itemId, dates) {
+    if (dates.length > 0) {
+      const res = await ItemDataHelper.executeQueryOnDates(
+        [_.last(dates)],
+        async date =>
+          await ItemDataHelper.getTable(date, "ItemData").findAll({
+            where: { itemId },
+            include: [
+              { model: S_Server, as: "server" },
+              {
+                model: ItemDataHelper.getTable(date, "ItemDescription"),
+                as: "itemDescriptions",
+              },
+            ],
+            order: [["timestamp", "ASC"]],
+          }),
+      );
+      return _.flatten(res);
+    }
+    return [];
   }
 
   static async getDatesWithItemPrices(itemId) {
@@ -65,7 +66,7 @@ class ItemStatHelper {
         ? new Date(ret.get({ plain: true }).timestamp).format("yyyy_mm_dd")
         : null;
     });
-    return res.sort();
+    return _.compact(res.sort());
   }
 }
 

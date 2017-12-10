@@ -30,9 +30,9 @@ router.get("/:itemId", async (req, res) => {
     ],
   });
   if (item !== null) {
-    const prices = await ItemStatHelper.getItemPrices(item.id);
     const dates = await ItemStatHelper.getDatesWithItemPrices(item.id);
     const recipe = await ItemRecipeHelper.getItemRecipe(item.id);
+    const prices = await ItemStatHelper.getItemPrices(item.id, dates);
     // console.log("recipe ", recipe);
     const resData = {
       item: item.get({ plain: true }),
